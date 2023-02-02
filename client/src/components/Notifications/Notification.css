@@ -1,0 +1,61 @@
+.notification-wrapper {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 300px;
+}
+
+.notification-item {
+  box-shadow: 0 0 10px rgba(0,0,0, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  animation: SlideLeft 0.7s;
+  animation-fill-mode: forwards;
+  width: 300px;
+}
+
+
+.notification-item p {
+  margin: 0px;
+  padding: 10px;
+}
+
+.notification-item .bar {
+  height: 5px;
+  background-color: tomato;
+}
+
+.notification-item.success .bar {
+  /* background-color: rgb(104, 255, 117); */
+  background-color: #3B82F6;
+}
+.notification-item.error .bar {
+  background-color: red;
+}
+
+.notification-item.exit {
+  animation: slideRight 0.7s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes SlideLeft {
+  0% {
+      margin-left: 120%;
+  }
+
+  100% {
+      margin-left: 0;
+  }
+}
+
+@keyframes slideRight {
+  0% {
+      margin-left: 0;
+  }
+
+  100% {
+      margin-left: 120%;
+  }
+}
+
