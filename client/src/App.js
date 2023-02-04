@@ -3,12 +3,15 @@ import { useHistory } from 'react-router-dom';
 import Container from './components/Container';
 import Router from './components/Router';
 import Toasty from './components/Toasty';
+import { useAddNotification } from './components/Notifications/NotificationProvider';
 
 import './App.css';
-import axios, { isCancel, AxiosError, AxiosHeaders } from 'axios';
+import axios from 'axios';
 
 
 function App() {
+  const dispatchAddNotification = useAddNotification();
+
   const [username, setUsername] = useState('');
   const [validUsername, setValidUsername] = useState(false);
   const [userFocus, setUserFocus] = useState(false);
@@ -27,19 +30,17 @@ function App() {
   const [emailFocus, setEmailFocus] = useState(false);
   const [emailExists, setEmailExists] = useState(false)
 
-  const [errors, setErrors] = useState([]);
-  const [errMsg, setErrMsg] = useState('');
-  const [success, setScueess] = useState(false)
-
+  const [isValidLogin, setIsValidLogin] = useState(false);
   const [toasty, setToasty] = useState(false)
   const [toastyTimer, setToastyTimer] = useState(0)
 
-  useEffect(() => {
-    setTimeout(() => {
-      setToasty(true)
-      setToastyTimer(prev => prev + 1)
-    }, (toastyTimer === 0 ? 4000 : 1_800_000))
-  }, [])
+  // useEffect(() => {
+
+  //   setTimeout(() => {
+  //     setToasty(true)
+  //     setToastyTimer(prev => prev + 1)
+  //   }, (toastyTimer === 0 ? 4000 : 1_800_000))
+  // }, [])
 
   const userRef = useRef();
   // errRef will be used to put focus on it when it occurs so that it can be announced by screen readers for accessibility
@@ -51,144 +52,63 @@ function App() {
   const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#?&*()$%]).{3,24}$/;
 
   function handleSignup() {
-    // fetch('http://localhost:5000/auth/signup', {
-    //   method: 'POST',
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ username, email, password }),
-    // })
-    //   .then((response) => response.json())
-    //   .then((token) => {
-    //     // history.push('/');
-    //     // window.location.reload();
-    //   })
-    //   .catch((error) => console.log(error));
-
-
     axios.post('http://localhost:5000/auth/signup', {
       username,
       email,
       password,
       confirmPassword
     })
-      .then(token => {
-        console.log('token: ', token);
-        localStorage.setItem('token', token);
+      .then(response => {
+        localStorage.setItem('token', response.data.token);
         history.push('/');
         window.location.reload();
       })
       .catch(error => {
-        console.log('error.response.data.errors: ', error);
-        setErrors(error.response.data.errors)
-        alert(error.response.data.errors[0].msg)
+        console.log('error froms aving user in db: ', error);
+        handleError(error)
       });
   }
-
-  // async function handleLogin() {
-  //   try {
-  //     const response = await fetch('http://localhost:5000/auth/login', {
-  //       method: 'POST',
-  //       headers: {
-  //         Accept: 'application/json',
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({ username, password }),
-  //     });
-
-  //     console.log('response received by the server: ', response);
-
-  //     if (response.data) {
-  //       console.log('there is response.data');
-  //       console.log('response.data: ', response.data);
-  //     } else {
-  //       console.log('there is no response data');
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
 
   function handleLogin() {
     axios.post('http://localhost:5000/auth/login', {
       username,
       password
     })
-      .then(token => {
-        console.log('token: ', token);
-        localStorage.setItem('token', token);
-        // history.push('/');
-        // window.location.reload();
+      .then(response => {
+        localStorage.setItem('token', response.data.token);
+        history.push('/');
+        window.location.reload();
+        dispatchAddNotification({ result: "SUCCESS", message: "Succesfully Logged in!" });
       })
       .catch(error => {
-        setErrors(error.response.data.errors)
-        alert(error.response.data.errors[0].msg)
+        console.log('error: ', error);
+        handleError(error)
       });
   }
 
-  // function handleLogin() {
-  //   fetch('http://localhost:5000/auth/login', {
-  //     method: 'POST',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({ username, password }),
-  //   })
-  //     .then((response) => {
-  //       if(!response.ok) {
-  //         return response.json().then((errorJSON) => {
-  //           console.log('errorJSON: ', errorJSON.errors[0]);
-  //           throw Error(errorJSON.errors);
-  //         })
-  //       }
-  //       return response.json();
 
+  const handleError = (error) => {
+    if (error.code === "ERR_NETWORK") {
+      dispatchAddNotification({ result: "ERROR", message: "There is a problem with the connection to the server. Please try again" });
+    } else {
+      const errorsArray = error.response.data.errors;
+      errorsArray.forEach(err => dispatchAddNotification({ result: "ERROR", message: err.msg }));
+    }
 
-  //       // if(!response.ok) {
-  //       //   throw Error(response)
-  //       // }
-  //       // return response.json()
-  //     })
-  //     .then((token) => {
-  //       localStorage.setItem('token', token);
-  //       history.push('/');
-  //       window.location.reload();
-  //     })
-  //     .catch((error) => {
-  //       console.log('error: ', JSON.stringify(error));
-  //       console.log('error:', JSON.parse(error));
-  //     })
-  //     // .catch((error) => {
-  //     //   return error.json().then((errorJSON) => {
-  //     //     console.log(errorJSON.errors);
-  //     //     // setErrors(errorJSON.errors);
-  //     //   });
-  //     // });
-  //   }
+  }
 
   function handleLogout() {
     localStorage.removeItem('token');
-    localStorage.removeItem('username');
     history.push('/');
     window.location.reload();
   }
-
-  useEffect(() => {
-    userRef.current.focus();
-  }, [])
 
   // VALIDATE THE USERNAME
   useEffect(() => {
     // check if username matches the regexp. It returns a boolean value
     const result = USER_REGEX.test(username)
-    // setTimeout(() => {
-    //   console.log('username: ', username);
-    // }, 500);
 
     let checkUsernameExists = setTimeout(() => {
-      console.log('FIRED: ', username);
       axios.post('http://localhost:5000/auth/check-username-exists', {
         username
       })
@@ -199,8 +119,6 @@ function App() {
         })
         .catch(error => {
           console.log('error: ', error);
-          // setErrors(error.response.data.errors)
-          // alert(error.response.data.errors[0].msg)
         });
     }, 700);
     // setValidUsername(result)
@@ -208,7 +126,6 @@ function App() {
       clearTimeout(checkUsernameExists);
     }
   }, [username])
-
 
   // VALIDATE THE EMAIL
   useEffect(() => {
@@ -225,8 +142,6 @@ function App() {
         })
         .catch(error => {
           console.log('error: ', error);
-          // setErrors(error.response.data.errors)
-          // alert(error.response.data.errors[0].msg)
         });
     }, 500);
     // setValidEmail(result)
@@ -235,40 +150,36 @@ function App() {
     }
   }, [email])
 
+  // useEffect(() => {
+  //   console.log('isValidLogin: ', isValidLogin);
+  //   if (username.length > 3 && password.length > 3) {
+  //     setIsValidLogin(true)
+  //   }
+  // }, [username, password])
+
   // VALIDATE THE PASSWORD
   useEffect(() => {
-    const result = PWD_REGEX.test(password)
-    setValidPassword(result)
-    // const match = password === confirmPassword;
-    console.log('password === confirmPassword: ', (password.length > 0 && confirmPassword.length > 0) && password === confirmPassword);
-    console.log('password, confirmPassword: ', password.length, confirmPassword.length);
+    const result = PWD_REGEX.test(password);
+    setValidPassword(result);
     (password.length > 0 || confirmPassword.length > 0) && setValidConfirmPassword(password === confirmPassword)
   }, [password, confirmPassword])
 
-  useEffect(() => {
-    console.log('validConfirmPassword: ', validConfirmPassword);
-  }, [validConfirmPassword])
-
-
-  useEffect(() => {
-    setErrMsg('')
-  }, [username, password, confirmPassword])
-
-
   return (
     <>
-      {toasty && <Toasty />}
+      {/* {toasty && <Toasty />} */}
       <Container>
         <p ref={errRef}></p>
         <Router
           userRef={userRef}
           setUserFocus={setUserFocus}
+          username={username}
+          setIsValidLogin={setIsValidLogin}
           userFocus={userFocus}
           handleSignup={handleSignup}
-          username={username}
           setUsername={setUsername}
           setConfirmPassword={setConfirmPassword}
           setEmail={setEmail}
+          isValidLogin={isValidLogin}
 
           password={password}
           setPassword={setPassword}

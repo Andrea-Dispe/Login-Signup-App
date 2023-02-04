@@ -10,12 +10,8 @@ body {
 }
 
 .validation-msg {
-  /* border: 1px solid lightsteelblue; */
   border-radius: 5px;
   padding: 2px;
-  /* width: 350px; */
-  /* height: 250px; */
-  /* background-color: linen; */
   position: absolute;
   top: -20px;
   /* left: 10px; */

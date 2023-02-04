@@ -1,9 +1,15 @@
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import StrengthMeter from './StrengthMeter'
+import StrengthMeter from './StrengthMeter/StrengthMeter'
 import { faCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { useEffect } from 'react';
 
 const SignUp = (props) => {
+
+  useEffect(() => {
+    props.userRef.current.focus();
+  }, [])
+
   return (
     <>
       <div className="bg-blue-500 mt-7 shadow-2xl xs:rounded-t-xl sm:rounded-xl xs:h-48 sm:h-96">
@@ -13,7 +19,7 @@ const SignUp = (props) => {
       </div>
 
       <div className="flex justify-center items-center flex-col shadow-xl bg-white sm:rounded-xl p-2 sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
-        <h2 className="text-blue-500 m-1 text-2xl font-bold w-15 pb-2.5">Sign Up</h2>
+        <h2 className="text-blue-500 m-1 text-2xl font-bold w-15 pb-7">Sign Up</h2>
 
         <div className='test'>
           <div className='input'>

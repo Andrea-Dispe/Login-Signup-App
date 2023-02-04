@@ -3,27 +3,15 @@ const bcrypt = require('bcrypt');
 const JWT = require('jsonwebtoken');
 const User = require('../models/usersModel');
 
-
-exports.getAll = async (req, res) => {
-
-  res.send('sdfpnfpnp')
-  // try {
-  //   const user = await User.find({ email: 'dispe.andrea@gmail.com' });
-  //   res.status(200).json(user);
-  // } catch (error) {
-  //   res.status(404).json({ message: error.message });
-  // }
-}
-
 exports.signup = async (req, res) => {
-  const { username, email, password} = req.body;
+  const { username, email, password } = req.body;
 
   // VALIDATE INPUT
   // validationResult will check inside the req for the fields and if they respect the specification given in the middleware
   const hasErrors = validationResult(req);
   console.log('hasErrors: ', hasErrors);
-  console.log('typeof hasErrors: ', typeof  hasErrors);
-
+  console.log('typeof hasErrors: ', typeof hasErrors);
+  console.log('hasErrors.array(): ', hasErrors.array());
   // hasErrors is an array and if it is not empty then returns the error array and display them
   if (!hasErrors.isEmpty()) {
     return res.status(401).json({
@@ -37,11 +25,9 @@ exports.signup = async (req, res) => {
   // if the userInDb already exists throw an error
   if (userInDb[0]) {
     return res.status(400).send({
-      errors: [
-        {
-          msg: 'This user is already registered',
-        },
-      ],
+      errors: [{
+        msg: 'This user is already registered',
+      }]
     });
   }
   // HASH PASSWORD
@@ -68,10 +54,15 @@ exports.signup = async (req, res) => {
         expiresIn: 864_000,
       }
     );
-    res.status(200).json(token);
+    res.status(200).json({token});
   } catch (error) {
-    console.log('error: ', error);
-    res.status(409).json({ message: error });
+    console.log('error in saving user in db: ', error);
+    res.status(409).send({
+      errors: [{
+        msg: 'Temporary problem with the server. Please try again later',
+        error
+      }]
+    });
   }
 }
 
@@ -81,8 +72,6 @@ exports.login = async (req, res) => {
 
   // VALIDATE INPUTS
   if (!hasErrors.isEmpty()) {
-    console.log('there are errros')
-    console.log('hasErrors.array(): ', hasErrors.array());
     return res.status(401).json({
       errors: hasErrors.array(),
     });
@@ -92,11 +81,9 @@ exports.login = async (req, res) => {
   const user = await User.findOne({ username });
   if (!user) {
     return res.status(401).send({
-      errors: [
-        {
-          msg: 'Username or password is incorrect',
-        },
-      ],
+      errors:[ {
+        msg: 'Username or password is incorrect',
+      }]
     });
   }
 
@@ -107,20 +94,18 @@ exports.login = async (req, res) => {
     const token = await JWT.sign({ username }, 'mysecret', {
       expiresIn: 864_000,
     });
-    return res.json(token);
+    return res.json({token});
   } else {
     return res.status(400).send({
-      errors: [
-        {
-          msg: 'Username or password is incorrect',
-        },
-      ],
+      errors: [{
+        msg: 'Username or password is incorrect',
+      }]
     });
   }
 }
 
-exports.checkUsernameExists = async(req, res) => {
-  const {username} = req.body;
+exports.checkUsernameExists = async (req, res) => {
+  const { username } = req.body;
   const user = await User.findOne({ username });
   user && res.json({
     msg: 'This username is already taken',
@@ -132,8 +117,8 @@ exports.checkUsernameExists = async(req, res) => {
   })
 }
 
-exports.checkEmailExists = async(req, res) => {
-  const {email} = req.body;
+exports.checkEmailExists = async (req, res) => {
+  const { email } = req.body;
   const user = await User.findOne({ email });
   user && res.json({
     msg: 'This email is already taken',

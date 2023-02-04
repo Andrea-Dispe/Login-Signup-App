@@ -3,9 +3,6 @@ const { body } = require('express-validator');
 const authController = require('../controllers/authController');
 
 
-
-router.get('/all', authController.getAll);
-
 // express-validator will run middlewares Validators and/or Sanitizers functions
 // the middlewares need to be wrapped inside an array. Chekc takes the req field as string
 // as first parameter and a custom error message as second param
@@ -53,7 +50,7 @@ router.post(
   '/login',
   [
     body('username', 'The username field cannot be empty').not().isEmpty().trim().escape(),
-    body('password', 'Please provide a password that is longer than 6 characters').isLength({ min: 6 }),
+    body('password', 'Please provide a password that is longer than 3 characters').isLength({ min: 6 }),
   ],
   authController.login
 );

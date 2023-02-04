@@ -16,13 +16,14 @@
 }
 
 
-.notification-item p {
+.notification-item p, .notification-item h3{
   margin: 0px;
+  font-size: 14px;
   padding: 10px;
 }
 
 .notification-item .bar {
-  height: 5px;
+  height: 2px;
   background-color: tomato;
 }
 

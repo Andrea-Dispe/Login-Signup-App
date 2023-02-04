@@ -3,7 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import UserLoggedIn from './UserLoggedIn';
 import SignUp from './SignUp';
-import Login from './Login';
+import Login from './Login.jsx';
 
 const Router = (props) => {
   return (
@@ -26,7 +26,6 @@ const Router = (props) => {
             setConfirmPassword={props.setConfirmPassword}
             setUserFocus={props.setUserFocus}
             userFocus={props.userFocus}
-            username={props.username}
             validUsername={props.validUsername}
             usernameExists={props.usernameExists}
             emailFocus={props.emailFocus}
@@ -42,6 +41,9 @@ const Router = (props) => {
             confirmPasswordFocus={props.confirmPasswordFocus}
             setConfirmPasswordFocus={props.setConfirmPasswordFocus}
             validConfirmPassword={props.validConfirmPassword}
+            isValidLogin={props.isValidLogin}
+            username={props.username}
+            setIsValidLogin={props.setIsValidLogin}
           />
         </Route>
 
