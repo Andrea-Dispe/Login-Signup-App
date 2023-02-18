@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import { v4 } from 'uuid';
 import Notification from './Notification';
 import { createContext, useContext, useReducer } from 'react';
@@ -6,7 +7,6 @@ const NotificationContext = createContext()
 
 export const useAddNotification = () => {
   const dispatch = useContext(NotificationContext);
-
   return (props) => {
     dispatch({
       type: "ADD_NOTIFICATION",
@@ -18,9 +18,9 @@ export const useAddNotification = () => {
   }
 }
 
+
 export const useRemoveNotification = () => {
   const dispatch = useContext(NotificationContext);
-
   return (id) => {
     dispatch({
       type: "REMOVE_NOTIFICATION",
@@ -30,7 +30,6 @@ export const useRemoveNotification = () => {
     })
   }
 }
-
 
 const NotificationProvider = (props) => {
   const notifications = []
@@ -48,21 +47,6 @@ const NotificationProvider = (props) => {
         return state;
     }
   }, notifications);
-
-
-
-
-
-  // dispatch({
-  //   type: "ADD_NOTIFICATION",
-  //   payload: {
-  //     id: v4(),
-  //     type: "SUCCESS",
-  //     message: "New Notification!",
-  //     title: "Seccess"
-  //   }
-  // })
-
 
   return (
     <NotificationContext.Provider value={dispatch}>

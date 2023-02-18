@@ -45,7 +45,7 @@ const StrengthMeter = (props) => {
 
   return (
     <>
-      <div className="wrapper absolute top-[-17px] flex items-center	">
+      <div className="strengthMeter">
         <div className="pwd-label">{initPwdChecker().val}</div>
         <progress
           className={`pwd-checker-bar strength-${initPwdChecker().val}`}

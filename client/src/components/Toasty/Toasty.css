@@ -1,0 +1,31 @@
+
+.toasty-wrapper {
+  position: absolute;
+  bottom: 0px;
+  right: -200px;
+  animation-name: toastySlider;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+}
+
+@keyframes toastySlider {
+  0% {
+    display: none;
+    right: -200px;
+  }
+
+  20% {
+    display: flex;
+    right: 0px;
+  }
+
+  70% {
+    display: flex;
+    right: 0px;
+  }
+
+  100% {
+    display: none;
+    right: -200px;
+   }
+}

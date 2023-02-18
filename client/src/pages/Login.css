@@ -1,0 +1,9 @@
+.margin-bt-10 {
+  margin-bottom: 10px;
+}
+.auth-input-container.login-email {
+  margin-top: 30px;
+}
+.auth-input-container.login-password {
+  margin-bottom: -30px;
+}

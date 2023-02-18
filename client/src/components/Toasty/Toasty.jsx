@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import toastyPic from '../media/toasty.png'
-import toastyAudio from '../media/toasty.mp3'
+import toastyPic from '../../assets/toasty.png'
+import toastyAudio from '../../assets/toasty.mp3'
 
 const Toasty = () => {
   let audio = new Audio(toastyAudio)
@@ -8,7 +8,7 @@ const Toasty = () => {
   useEffect(() => {
     audio.muted = false
     audio.play()
-  }, [])
+  }, [])  
 
   return (
     <div className="toasty-wrapper">
