@@ -1,69 +1,83 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const JWT = require('jsonwebtoken');
-const User = require('../models/usersModel');
+const nodemailer = require('nodemailer')
+const { v4: uuidv4 } = require('uuid');
+const path = require('path');
+require('dotenv').config();
+// MongoDB Models
+const User = require('../models/UsersModel');
+const UserVerification = require('../models/UserVerificationModel');
+const PasswordReset = require('../models/PasswordResetModel');
+// Files
+const { sendVerificationEmail, handleError, sendPasswordResetEmail } = require('../utils/utils')
+const errors = require('../utils/errors')
+
 
 exports.signup = async (req, res) => {
   const { username, email, password } = req.body;
+  console.log('------------------------------------------------------------------------------------------')
 
   // VALIDATE INPUT
-  // validationResult will check inside the req for the fields and if they respect the specification given in the middleware
   const hasErrors = validationResult(req);
-  console.log('hasErrors: ', hasErrors);
-  console.log('typeof hasErrors: ', typeof hasErrors);
-  console.log('hasErrors.array(): ', hasErrors.array());
-  // hasErrors is an array and if it is not empty then returns the error array and display them
   if (!hasErrors.isEmpty()) {
-    return res.status(401).json({
-      // the method array returns an array with all the validation errors
-      errors: hasErrors.array(),
-    });
+    return handleError(res, hasErrors.array(), 401, 'Some inputs have errors');
   }
 
   // VALIDATE USER
-  const userInDb = await User.find({ username });
-  // if the userInDb already exists throw an error
-  if (userInDb[0]) {
-    return res.status(400).send({
-      errors: [{
-        msg: 'This user is already registered',
-      }]
-    });
-  }
-  // HASH PASSWORD
-  // bcrypt.hash takes the password as 1st param and the amount of "salt" as 2nd param
-  // NB: bcrypt.hash is an asynchronous function
-  const hashedPassword = await bcrypt.hash(password, 10);
-  console.log('hashedPassword: ', hashedPassword);
-  // Save the user into the DB
-
-  const user = new User({ username, email, password: hashedPassword });
-  console.log('saved user: ', user);
-
+  let userFromEmail, userFromUsername;
   try {
-    await user.save();
-    //JWT
-    // the jsonwebtoken methods are asynchronous
-    // the .sign method will create the jwt and accept the payload as 1st param and the secret as 2nd param and object with options as 3rd param
-    const token = await JWT.sign(
-      {
-        username,
-      },
-      'mysecret',
-      {
-        expiresIn: 864_000,
-      }
-    );
-    res.status(200).json({token});
+    userFromEmail = await User.findOne({ email });
+    userFromUsername = await User.findOne({ username });
   } catch (error) {
-    console.log('error in saving user in db: ', error);
-    res.status(409).send({
-      errors: [{
-        msg: 'Temporary problem with the server. Please try again later',
-        error
-      }]
-    });
+    return handleError(res, error, 500, errors.signup.E_SG1001.msg);
   }
+  if (userFromEmail) {
+    return handleError(res, errors.signup.E_SG1009.desc, 403, errors.signup.E_SG1009.msg);
+  }
+  if (userFromUsername) {
+    return handleError(res, errors.signup.E_SG1010.desc, 403, errors.signup.E_SG1010.msg);
+  }
+
+  // HASH PASSWORD
+  let hashedPassword;
+  try {
+    hashedPassword = await bcrypt.hash(password, 10);
+  } catch (error) {
+    return handleError(res, error, 400, errors.signup.E_SG1002.msg);
+  }
+
+  // SAVE THE NEW USER INTO THE DB
+  const user = new User({ username, email, password: hashedPassword, verified: false });
+  let newUser;
+  try {
+    newUser = await user.save();
+    // res.status(200).json({ token });
+  } catch (error) {
+    return handleError(res, error, 409, errors.signup.E_SG1003.msg);
+  }
+  const { _id } = newUser;
+
+  // VERIFY USER THROUGH EMAIL
+  const isEmailSent = await sendVerificationEmail({ _id, username, email }, res);
+
+  // SEND RESPONSE
+  if (isEmailSent) {
+    res.status(200).json({
+      status: 'PENDING',
+      msg: `A verification email has been sent to ${email}.`
+    })
+  } else {
+    handleError(res, errors.signup.E_SG1011.desc, 400, errors.signup.E_SG1011.msg)
+  }
+
+  // CREATE THE JWT token
+  // try {
+  //   const token = await JWT.sign({ username, }, 'mysecret', { expiresIn: 864_000 });
+  //   // res.status(200).json({ token });
+  // } catch (error) {
+  //   return handleError(res, error, 409, errors.signup.E_SG1006.msg);
+  // }
 }
 
 exports.login = async (req, res) => {
@@ -72,49 +86,166 @@ exports.login = async (req, res) => {
 
   // VALIDATE INPUTS
   if (!hasErrors.isEmpty()) {
-    return res.status(401).json({
-      errors: hasErrors.array(),
-    });
+    return handleError(res, hasErrors.array(), 401, 'Some inputs have errors');
   }
 
   // VALIDATE USER
-  const user = await User.findOne({ username });
+  let user;
+  if (username.includes('@')) {
+    try {
+      user = await User.findOne({ email: username });
+    } catch (error) {
+      return handleError(res, error, 500, errors.login.E_LG1001.msg);
+    }
+  } else {
+    try {
+      user = await User.findOne({ username });
+    } catch (error) {
+      return handleError(res, error, 500, errors.login.E_LG1002.msg);
+    }
+  }
+
   if (!user) {
-    return res.status(401).send({
-      errors:[ {
-        msg: 'Username or password is incorrect',
-      }]
-    });
+    return handleError(res, 'No user found', 403, errors.login.E_LG1003.msg);
   }
 
   // VALIDATE PASSWORD
-  const isValid = await bcrypt.compare(password, user.password);
-  if (isValid) {
-    // SIGN THE JWT
-    const token = await JWT.sign({ username }, 'mysecret', {
-      expiresIn: 864_000,
-    });
-    return res.json({token});
-  } else {
-    return res.status(400).send({
-      errors: [{
-        msg: 'Username or password is incorrect',
-      }]
-    });
+  let isPasswordsValid;
+  try {
+    isPasswordsValid = await bcrypt.compare(password, user.password);
+  } catch (error) {
+    return handleError(res, error, 500, errors.login.E_LG1005.msg);
   }
+
+  if (!isPasswordsValid) {
+    return handleError(res, 'Wrong password provided', 403, errors.login.E_LG1006.msg);
+  }
+
+  // CHECK IF USER IS VERIFIED
+  if (!user.verified) {
+    console.log('user.verified: ', user.verified);
+    return handleError(res, 'User not verified yet', 401, errors.login.E_LG1004.msg);
+  }
+
+  console.log('user: ', user);
+  return handleError(res, '', 200, 'sdfnsdifpisn');
+
+
+  // if (isValid) {
+  //   // SIGN THE JWT
+  //   const token = await JWT.sign({ username }, 'mysecret', {
+  //     expiresIn: 864_000,
+  //   });
+  //   return res.json({ token });
+  // } else {
+  //   return handleError(res, '', 400, 'Username or password is incorrect');
+  // }
+}
+
+exports.verifyNewUser = async (req, res) => {
+  const { userId, uniqueString } = req.params;
+
+  let verification;
+  try {
+    verification = await UserVerification.findOne({ userId })
+  } catch (error) {
+    // handleError(res, error, 400, errors.signup.E_SG1008.msg)
+    const message = "Error occured while looking for the verification"
+    console.log('message: ', message);
+    return res.redirect(`/auth/verified/error=true&message=${message}`)
+  }
+
+  if (verification) {
+    // user verification exist
+    const { expiresAt } = verification;
+
+    // CHECK IF VALIDATION EXPIRED
+    if (expiresAt < Date.now()) {
+
+      // delete the verification
+      try {
+        await UserVerification.deleteOne({ userId });
+      } catch (error) {
+        const message = "An error occurred while clearing the expired verification"
+        return res.redirect(`/auth/verified/error=true&message=${message}`)
+      }
+
+      // delete the user
+      try {
+        await User.deleteOne({ _id: userId })
+        const message = "Link has expired. Please signup again."
+        return res.redirect(`/auth/verified/error=true&message=${message}`)
+      } catch (error) {
+        const message = "An error occurred while clearing the user"
+        return res.redirect(`/auth/verified/error=true&message=${message}`)
+      }
+    } else {
+
+      // check the uniquer string from the email is the one that is saved into the userVerification document
+      const hashedUniqueString = verification.uniqueString;
+
+      let isEmailUniqueStringValid;
+      try {
+        isEmailUniqueStringValid = await bcrypt.compare(uniqueString, hashedUniqueString)
+      } catch (error) {
+        const message = "Error occured while trying to hash the unique string"
+        return res.redirect(`/auth/verified/error=true&message=${message}`)
+      }
+
+      if (isEmailUniqueStringValid) {
+        // update the user verified status to true
+        try {
+          const user = await User.updateOne({ _id: userId }, { verified: true })
+        } catch (error) {
+          const message = "Error occured while trying to update the user verification status"
+          return res.redirect(`/auth/verified/error=true&message=${message}`)
+        }
+
+        // delete the userVerification record
+        try {
+          await UserVerification.deleteOne({ userId });
+        } catch (error) {
+          const message = "An error occurred while clearing the expired verification"
+          return res.redirect(`/auth/verified/error=true&message=${message}`)
+        }
+
+        return res.sendFile(path.join(__dirname, "../views/verified.html"))
+
+
+      } else {
+        const message = "The unique string is not valid."
+        return res.redirect(`/auth/verified/error=true&message=${message}`)
+      }
+    }
+
+  } else {
+    const message = "Verification has not been started or is already finished"
+    return res.redirect(`/auth/verified/error=true&message=${message}`)
+  }
+
+
+}
+
+exports.verifyNewUserLandingPage = async (req, res) => {
+  res.sendFile(path.join(__dirname, "../views/verified.html"))
 }
 
 exports.checkUsernameExists = async (req, res) => {
   const { username } = req.body;
-  const user = await User.findOne({ username });
-  user && res.json({
-    msg: 'This username is already taken',
-    exists: true
-  })
-  !user && res.json({
-    msg: 'This username is available',
-    exists: false
-  })
+
+  try {
+    const user = await User.findOne({ username });
+    user && res.json({
+      msg: 'This username is already taken',
+      exists: true
+    })
+    !user && res.json({
+      msg: 'This username is available',
+      exists: false
+    })
+  } catch (error) {
+    return handleError(res, error, 400);
+  }
 }
 
 exports.checkEmailExists = async (req, res) => {
@@ -128,4 +259,132 @@ exports.checkEmailExists = async (req, res) => {
     msg: 'This email is available',
     exists: false
   })
+}
+
+exports.requestPasswordReset = async (req, res) => {
+  const { email, redirectUrl } = req.body;
+  // CHECK IF USER EXISTS
+  let user;
+  try {
+    user = await User.findOne({ email });
+  } catch (error) {
+    return handleError(res, error, 400, errors.passwordReset.E_PR1001.msg);
+  }
+  if (!user) {
+    return handleError(res, errors.passwordReset.E_PR1002.desc, 400, errors.passwordReset.E_PR1002.msg);
+  }
+
+  // CHECK IF USER HAS BEEN VERIFIED
+  if (!user.verified) {
+    return handleError(res, errors.passwordReset.E_PR1003.desc, 400, errors.passwordReset.E_PR1003.msg);
+  }
+
+  // SEND PASSWORD RESET EMAIL
+  const isEmailSent = await sendPasswordResetEmail(user, redirectUrl, res);
+
+  // SEND RESPONSE
+  if (isEmailSent) {
+    res.status(200).json({
+      status: 'PENDING',
+      msg: `An email with the instructions to reset this account's password has been sent to ${email}.`
+    })
+  } else {
+    handleError(res, errors.signup.E_PR1004.desc, 400, errors.signup.E_PR1004.msg)
+  }
+}
+
+exports.passwordReset = async (req, res) => {
+  let { userId, resetString, newPassword } = req.body;
+  console.log('inside change password rest')
+  console.log('req.bpdy: ', req.body);
+
+  // GET THE PASSWORD RESET DOC ASSOCIATED TO THE USER ID
+  let passwordResetDoc;
+  try {
+    passwordResetDoc = await PasswordReset.findOne({ userId })
+  } catch (error) {
+    return handleError(res, error, 400, errors.passwordReset.E_PR1008.msg);
+  }
+  if (!passwordResetDoc) {
+    return handleError(res, '', 400, errors.passwordReset.E_PR1009.msg);
+  }
+  console.log('passwordResetDoc: ', passwordResetDoc);
+
+  // CHECK THAT THE PASSWORD RESET IS NOT EXPIRED
+  const { expiresAt, } = passwordResetDoc;
+  if (expiresAt < Date.now()) {
+    try {
+      // DELETE THE EXPIRED PASSWORD RESET DOC
+      const deletedPasswordResetDoc = await PasswordReset.deleteOne({ userId })
+      console.log('deletedPasswordResetDoc: ', deletedPasswordResetDoc);
+      return handleError(res, errors.passwordReset.E_PR1011.desc, 400, errors.passwordReset.E_PR1011.msg);
+    } catch (error) {
+      return handleError(res, error, 400, errors.passwordReset.E_PR1010.msg);
+    }
+  } else {
+
+    // COMPARE THE UNIQUE STRINGS
+    let hashedUniqueResetString, isUniqueResetStringValid;
+    try {
+      hashedUniqueResetString = passwordResetDoc.resetString;
+      isUniqueResetStringValid = await bcrypt.compare(resetString, hashedUniqueResetString)
+    } catch (error) {
+      return handleError(res, error, 400, errors.passwordReset.E_PR1012.msg);
+    }
+    if (!isUniqueResetStringValid) {
+      return handleError(res, errors.passwordReset.E_PR1016.desc, 400, errors.passwordReset.E_PR1016.msg);
+    }
+
+    // HASH THE NEW PASSWORD
+    let hashedPassword;
+    try {
+      hashedPassword = await bcrypt.hash(newPassword, 10);
+    } catch (error) {
+      return handleError(res, error, 400, errors.signup.E_PR1013.msg);
+    }
+    // UPDATE THE USER RECORD WITH THE NEW HASHED PASSWORD
+    try {
+      const user = await User.findOneAndUpdate({ userId }, { password: hashedPassword })
+    } catch (error) {
+      return handleError(res, error, 400, errors.signup.E_PR1014.msg);
+    }
+
+    // DELETE THE PASSWORD RESET DOCUMENT
+    try {
+      const deletedPasswordResetDoc = await PasswordReset.deleteOne({ userId })
+      return res.status(200).send({
+        msg: `Password changed succefully`,
+        status: "SUCCESS"
+      });
+    } catch (error) {
+      return handleError(res, error, 400, errors.passwordReset.E_PR1010.msg);
+    }
+  }
+}
+
+exports.deleteUser = async (req, res) => {
+  const { username, email } = req.body;
+  console.log('username: ', username);
+  console.log('email: ', email);
+  try {
+    const deletedUser = await User.deleteOne(username ? { username } : { email })
+    console.log('deletedUser: ', deletedUser);
+    if (deletedUser.deletedCount > 0) {
+      res.status(200).send({
+        msg: `This user has been delete from the DB}`,
+        status: "SUCCESS"
+      });
+    } res.status(202).send({
+      msg: `This user does not exist in the DB}`,
+      status: "SUCCESS"
+    });
+  } catch (error) {
+    res.status(400).send({
+      errors: [{
+        error,
+        msg,
+        status: "FAILED"
+      }]
+    });
+  }
 }

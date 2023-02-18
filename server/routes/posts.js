@@ -3,8 +3,8 @@
 
 
 const router = require('express').Router();
-const  {publicPosts, privatePosts} = require('../db')
-const checkAuth = require('../middleware/checkAuth')
+const  {publicPosts, privatePosts} = require('../config/db')
+const checkAuth = require('../middlewares/checkAuth')
 
 router.get('/public', (req, res) => {
   res.json(publicPosts)

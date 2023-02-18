@@ -1,0 +1,46 @@
+{
+  "E_SG1001": {
+    "msg": "An error has occured while creating your new account. Please contact the support and provide the error code E_SG1001",
+    "desc": "Error occured while trying to query the DB for the existence of the username during signup procedure."
+  },
+  "E_SG1002": {
+    "msg": "An error has occured while creating your new account. Please contact the support and provide the error code E_SG1002",
+    "desc": "Error occured while trying to hash the password during the signup procedure."
+  },
+  "E_SG1003": {
+    "msg": "An error has occured while creating your new account. Please contact the support and provide the error code E_SG1003",
+    "desc": "Error occured while trying to save the new user into the DB."
+  },
+  "E_SG1004": {
+    "msg": "An error has occured while sending the verification email. Please contact the support and provide the error code E_SG1004",
+    "desc": "Error occured while trying to hash the unique string for the verification email."
+  },
+  "E_SG1005": {
+    "msg": "An error has occured while sending verification email. Please contact the support and provide the error code E_SG1005",
+    "desc": "Error occured while trying to send the verification email with the transporter.sendMail."
+  },
+  "E_SG1006": {
+    "msg": "An error has occured while creating your new account. Please contact the support and provide the error code E_SG1006",
+    "desc": "Error occured while trying to sign the JWT in signup."
+  },
+  "E_SG1007": {
+    "msg": "An error has occured while sending verification email. Please contact the support and provide the error code E_SG1007",
+    "desc": "Error occured while trying to save the new user verification into the DB."
+  },
+  "E_SG1008": {
+    "msg": "An error has occured while validating your account. Please contact the support and provide the error code E_SG1008",
+    "desc": "Error occured while trying to find the verification account with the userId."
+  },
+  "E_SG1009": {
+    "msg": "This email is already registered ",
+    "desc": "Error occured because the email is alredy registered"
+  },
+  "E_SG1010": {
+    "msg": "This username is already registered ",
+    "desc": "Error occured because the username is alredy registered"
+  },
+  "E_SG1011": {
+    "msg": "An error has occured while creating your new account. Please contact the support and provide the error code E_SG1011",
+    "desc": "Error occured because the email has been rejected by the transporter in the send verification email procedure."
+  }
+}

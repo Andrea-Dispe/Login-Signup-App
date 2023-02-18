@@ -1,0 +1,28 @@
+{
+  "E_LG1001": {
+    "msg": "An error occured while accessing your account. Please contact the support and provide them with the error code E_LG1001",
+    "desc": "Error occured while trying to query the DB for the existence of the user from email provided during login procedure."
+  },
+  "E_LG1002": {
+    "msg": "An error occured while accessing your account. Please contact the support and provide them with the error code E_LG1002",
+    "desc": "Error occured while trying to query the DB for the existence of the user from username provided during login procedure."
+  },
+  "E_LG1003": {
+    "msg": "No user found with the provided email or username.",
+    "desc": "Error occured because the user provided an username or email that is not in the db during login procedure."
+  },
+  "E_LG1004": {
+    "msg": "This user has not been verified yet. Please check email inbox for the verification link and if it is expired please signup again.",
+    "desc": "Error occured because this user is not verified yet."
+  },
+  "E_LG1005": {
+    "msg": "An error occured while accessing your account. Please contact the support and provide them with the error code E_LG1005",
+    "desc": "Error occured while comparing the password provided with the one provided by the user during login procedure."
+  },
+  "E_LG1006": {
+    "msg": "The password provided is incorrect. Please try again.",
+    "desc": "Error occured the user input a wrong password during login procedure."
+  }
+}
+
+
