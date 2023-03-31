@@ -8,7 +8,7 @@ import debounce from 'lodash.debounce';
 
 
 import './App.css';
-import axios from 'axios'; 
+import axios from 'axios';
 
 
 
@@ -129,16 +129,15 @@ function App() {
       password
     })
       .then(response => {
-        // code here ...
         dispatchAddNotification({ result: "SUCCESS", message: "Succesfully Logged in!" });
       })
       .catch(error => {
-        dispatchAddNotification({ result: "ERROR", message: error.msg });
+        handleError(error);
       });
   }
 
   const handleError = (error) => {
-    console.error(error)
+    console.error("ERROR: ", error)
     if (error.code === "ERR_NETWORK") {
       dispatchAddNotification({ result: "ERROR", message: "There is a problem with the connection to the server. Please try again" });
     } else {

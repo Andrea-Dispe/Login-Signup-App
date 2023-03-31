@@ -70,14 +70,6 @@ exports.signup = async (req, res) => {
   } else {
     handleError(res, errors.signup.E_SG1011.desc, 400, errors.signup.E_SG1011.msg)
   }
-
-  // CREATE THE JWT token
-  // try {
-  //   const token = await JWT.sign({ username, }, 'mysecret', { expiresIn: 864_000 });
-  //   // res.status(200).json({ token });
-  // } catch (error) {
-  //   return handleError(res, error, 409, errors.signup.E_SG1006.msg);
-  // }
 }
 
 exports.login = async (req, res) => {
@@ -86,7 +78,7 @@ exports.login = async (req, res) => {
 
   // VALIDATE INPUTS
   if (!hasErrors.isEmpty()) {
-    return handleError(res, hasErrors.array(), 401, 'Some inputs have errors');
+    return handleError(res, hasErrors.array(), 401);
   }
 
   // VALIDATE USER
