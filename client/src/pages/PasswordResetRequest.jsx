@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { FaUserAlt, FaEnvelope, FaKey, FaCheck, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEnvelope } from "react-icons/fa";
 
 
-
+  
 const PasswordResetRequest = ({ handlePasswordResetRequest, email, setEmail }) => {
   return (
     <>
@@ -11,9 +11,9 @@ const PasswordResetRequest = ({ handlePasswordResetRequest, email, setEmail }) =
           <h1 className="text-5xl">Benvenuto</h1>
         </div>
       </div>
-      <div className="flex items-center flex-col shadow-xl bg-white sm:rounded-xl p-2 sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
+      <div className="flex items-center flex-col shadow-xl bg-white sm:rounded- xl p-2 sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
         <h2 className="text-blue-500 m-9 text-2xl font-bold w-15">Reset Password</h2>
-        <div className='auth-input-container margin-bt-10' style={{'margin-top': '75px  '}}>
+        <div className='auth-input-container margin-bt-10' style={{'marginTop': '75px  '}}>
           <FaEnvelope className="auth-icon" size='20px' />
           <input
             // ref={userRef}

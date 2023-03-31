@@ -135,16 +135,22 @@ exports.login = async (req, res) => {
 }
 
 exports.verifyNewUser = async (req, res) => {
-  const { userId, uniqueString } = req.params;
+  console.log('dasda')
+  console.log('req: ', req.body);
+
+
+  const { userId, uniqueString } = req.body
+
+
+  const error = 'errororororororororo'
+  const message = "fyisdisdbisfubsd"
 
   let verification;
   try {
     verification = await UserVerification.findOne({ userId })
   } catch (error) {
-    // handleError(res, error, 400, errors.signup.E_SG1008.msg)
     const message = "Error occured while looking for the verification"
-    console.log('message: ', message);
-    return res.redirect(`/auth/verified/error=true&message=${message}`)
+    return res.send([error, message])
   }
 
   if (verification) {
@@ -159,17 +165,17 @@ exports.verifyNewUser = async (req, res) => {
         await UserVerification.deleteOne({ userId });
       } catch (error) {
         const message = "An error occurred while clearing the expired verification"
-        return res.redirect(`/auth/verified/error=true&message=${message}`)
+        return res.send([error, message])
       }
 
       // delete the user
       try {
         await User.deleteOne({ _id: userId })
         const message = "Link has expired. Please signup again."
-        return res.redirect(`/auth/verified/error=true&message=${message}`)
+        return res.send([error, message])
       } catch (error) {
         const message = "An error occurred while clearing the user"
-        return res.redirect(`/auth/verified/error=true&message=${message}`)
+        return res.send([error, message])
       }
     } else {
 
@@ -181,7 +187,7 @@ exports.verifyNewUser = async (req, res) => {
         isEmailUniqueStringValid = await bcrypt.compare(uniqueString, hashedUniqueString)
       } catch (error) {
         const message = "Error occured while trying to hash the unique string"
-        return res.redirect(`/auth/verified/error=true&message=${message}`)
+        return res.send([error, message])
       }
 
       if (isEmailUniqueStringValid) {
@@ -190,7 +196,7 @@ exports.verifyNewUser = async (req, res) => {
           const user = await User.updateOne({ _id: userId }, { verified: true })
         } catch (error) {
           const message = "Error occured while trying to update the user verification status"
-          return res.redirect(`/auth/verified/error=true&message=${message}`)
+          return res.send([error, message])
         }
 
         // delete the userVerification record
@@ -198,7 +204,7 @@ exports.verifyNewUser = async (req, res) => {
           await UserVerification.deleteOne({ userId });
         } catch (error) {
           const message = "An error occurred while clearing the expired verification"
-          return res.redirect(`/auth/verified/error=true&message=${message}`)
+          return res.send([error, message])
         }
 
         return res.sendFile(path.join(__dirname, "../views/verified.html"))
@@ -206,21 +212,19 @@ exports.verifyNewUser = async (req, res) => {
 
       } else {
         const message = "The unique string is not valid."
-        return res.redirect(`/auth/verified/error=true&message=${message}`)
+        return res.send([error, message])
       }
     }
 
   } else {
     const message = "Verification has not been started or is already finished"
-    return res.redirect(`/auth/verified/error=true&message=${message}`)
+    return res.send([error, message])
   }
-
-
 }
 
-exports.verifyNewUserLandingPage = async (req, res) => {
-  res.sendFile(path.join(__dirname, "../views/verified.html"))
-}
+// exports.verifyNewUserLandingPage = async (req, res) => {
+//   res.sendFile(path.join(__dirname, "../views/verified.html"))
+// }
 
 exports.checkUsernameExists = async (req, res) => {
   const { username } = req.body;

@@ -10,7 +10,7 @@ dotenv.config();
 const { AUTH_EMAIL, AUTH_PASSWORD, EMAIL_HOST } = process.env;
 
 exports.sendVerificationEmail = async ({ _id, username, email }, res) => {
-  const currentUrl = "http://localhost:5000";
+  const currentUrl = "http://localhost:3000";
   const uniqueString = uuidv4() + _id;
   const mailOptions = {
     from: EMAIL_HOST,
@@ -19,13 +19,17 @@ exports.sendVerificationEmail = async ({ _id, username, email }, res) => {
     text: "TEST TEXT",
     html: `<p>Verify your email</p>
   <div>
-    Click on this <a href=${currentUrl}/auth/user-verify/${_id}/${uniqueString}>link</a>
-  </div>
-  <div>
-    This link will expire in 24 hours from the moment you received this email.
-  </div>
-  `}
+    Click on this <a href="http://localhost:3000/verified/${_id}/${uniqueString}">link</a>
+    <br />
 
+ddddd
+    </div>
+    <div>
+    This link will expire in 24 hours from the moment you received this email.
+    </div>
+    `}
+
+    // Click on this <a href=${currentUrl}/auth/user-verify/${_id}/${uniqueString}>link</a>
   // HASH THE UNIQUE STRING
   let hashedUniqueString;
   try {

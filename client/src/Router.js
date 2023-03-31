@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import UserLoggedIn from './pages/UserLoggedIn';
 import SignUp from './pages/Signup';
@@ -7,95 +7,122 @@ import Login from './pages/Login.jsx';
 import EmailSent from "./pages/EmailSent";
 import PasswordResetRequest from "./pages/PasswordResetRequest"
 import PasswordReset from "./pages/PasswordReset"
+import VerifiedEmail from "./pages/VerifiedEmail"
 
 
 const Router = (props) => {
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route path="/" exact>
-          {props.loggedIn ? (
-            <UserLoggedIn handleLogout={props.handleLogout} email={props.email} />
-          ) : (
-            <Login
-              setUsername={props.setUsername}
-              userRef={props.userRef}
-              setPassword={props.setPassword}
-              handleLogin={props.handleLogin}
-              handleShowPassword={props.handleShowPassword}
-              passwordRef={props.passwordRef}
-              showPassword={props.showPassword}
-            />
-          )}
-        </Route>
-        <Route path="/signup">
-          <SignUp
-            handleSignup={props.handleSignup}
-            userRef={props.userRef}
-            setEmail={props.setEmail}
+
+    <Routes>
+      <Route path="/" exact element={
+        props.loggedIn ? (
+          <UserLoggedIn handleLogout={props.handleLogout} email={props.email} />
+        ) : (
+          <Login
             setUsername={props.setUsername}
+            userRef={props.userRef}
             setPassword={props.setPassword}
-            setConfirmPassword={props.setConfirmPassword}
-            setUserFocus={props.setUserFocus}
-            userFocus={props.userFocus}
-            validUsername={props.validUsername}
-            usernameExists={props.usernameExists}
-            emailFocus={props.emailFocus}
-            validEmail={props.validEmail}
-            email={props.email}
-            emailExists={props.emailExists}
-            setEmailFocus={props.setEmailFocus}
-            password={props.password}
-            passwordFocus={props.passwordFocus}
-            setPasswordFocus={props.setPasswordFocus}
-            validPassword={props.validPassword}
-            confirmPassword={props.confirmPassword}
-            confirmPasswordFocus={props.confirmPasswordFocus}
-            setConfirmPasswordFocus={props.setConfirmPasswordFocus}
-            validConfirmPassword={props.validConfirmPassword}
-            isValidLogin={props.isValidLogin}
-            username={props.username}
-            setIsValidLogin={props.setIsValidLogin}
+            handleLogin={props.handleLogin}
             handleShowPassword={props.handleShowPassword}
             passwordRef={props.passwordRef}
-            confirmPasswordRef={props.confirmPasswordRef}
             showPassword={props.showPassword}
-            showConfirmPassword={props.showConfirmPassword}
           />
-        </Route>
-        <Route path="/email-sent/:email">
-          <EmailSent />
-        </Route>
-        <Route path="/password-reset-request">
-          <PasswordResetRequest
+        )
+      }>
+
+        {/* <Route path="/" exact>
+              {props.loggedIn ? (
+                <UserLoggedIn handleLogout={props.handleLogout} email={props.email} />
+              ) : (
+                <Login
+                  setUsername={props.setUsername}
+                  userRef={props.userRef}
+                  setPassword={props.setPassword}
+                  handleLogin={props.handleLogin}
+                  handleShowPassword={props.handleShowPassword}
+                  passwordRef={props.passwordRef}
+                  showPassword={props.showPassword}
+                />
+              )} */}
+      </Route>
+      <Route path="/signup" element={
+        <SignUp
+          handleSignup={props.handleSignup}
+          userRef={props.userRef}
+          setEmail={props.setEmail}
+          setUsername={props.setUsername}
+          setPassword={props.setPassword}
+          setConfirmPassword={props.setConfirmPassword}
+          setUserFocus={props.setUserFocus}
+          userFocus={props.userFocus}
+          validUsername={props.validUsername}
+          usernameExists={props.usernameExists}
+          emailFocus={props.emailFocus}
+          validEmail={props.validEmail}
+          email={props.email}
+          emailExists={props.emailExists}
+          setEmailFocus={props.setEmailFocus}
+          password={props.password}
+          passwordFocus={props.passwordFocus}
+          setPasswordFocus={props.setPasswordFocus}
+          validPassword={props.validPassword}
+          confirmPassword={props.confirmPassword}
+          confirmPasswordFocus={props.confirmPasswordFocus}
+          setConfirmPasswordFocus={props.setConfirmPasswordFocus}
+          validConfirmPassword={props.validConfirmPassword}
+          isValidLogin={props.isValidLogin}
+          username={props.username}
+          setIsValidLogin={props.setIsValidLogin}
+          handleShowPassword={props.handleShowPassword}
+          passwordRef={props.passwordRef}
+          confirmPasswordRef={props.confirmPasswordRef}
+          showPassword={props.showPassword}
+          showConfirmPassword={props.showConfirmPassword}
+        />
+
+      }>
+      </Route>
+
+      <Route path="/email-sent/:email" element={<EmailSent />}></Route>
+      <Route path="/password-reset-request" element={
+        <PasswordResetRequest
           handlePasswordResetRequest={props.handlePasswordResetRequest}
           email={props.email}
           setEmail={props.setEmail}
-          />
-        </Route>
-        <Route path="/password-reset/:_id/:resetString">
-          <PasswordReset
-           password={props.password}
-           passwordFocus={props.passwordFocus}
-           validPassword={props.validPassword}
-           confirmPassword={props.confirmPassword}
-           confirmPasswordFocus={props.confirmPasswordFocus}
-           setConfirmPasswordFocus={props.setConfirmPasswordFocus}
-           validConfirmPassword={props.validConfirmPassword}
-           handleShowPassword={props.handleShowPassword}
-           passwordRef={props.passwordRef}
-           confirmPasswordRef={props.confirmPasswordRef}
-           showPassword={props.showPassword}
-           showConfirmPassword={props.showConfirmPassword}
-           changePassword={props.changePassword}
-           setPasswordFocus={props.setPasswordFocus}
-           setPassword={props.setPassword}
-           setConfirmPassword={props.setConfirmPassword}
+        />
+      }>
+      </Route>
+      <Route path="/password-reset/:_id/:resetString" element={
+        <PasswordReset
+          password={props.password}
+          passwordFocus={props.passwordFocus}
+          validPassword={props.validPassword}
+          confirmPassword={props.confirmPassword}
+          confirmPasswordFocus={props.confirmPasswordFocus}
+          setConfirmPasswordFocus={props.setConfirmPasswordFocus}
+          validConfirmPassword={props.validConfirmPassword}
+          handleShowPassword={props.handleShowPassword}
+          passwordRef={props.passwordRef}
+          confirmPasswordRef={props.confirmPasswordRef}
+          showPassword={props.showPassword}
+          showConfirmPassword={props.showConfirmPassword}
+          changePassword={props.changePassword}
+          setPasswordFocus={props.setPasswordFocus}
+          setPassword={props.setPassword}
+          setConfirmPassword={props.setConfirmPassword}
 
-          />
-        </Route>
-      </Switch>
-    </BrowserRouter>
+        />
+
+      }>
+      </Route>
+      <Route path="/verified/:userId/:uniqueString" element={
+        <VerifiedEmail
+          verifyUser={props.verifyUser}
+        />
+
+      }>
+      </Route>
+    </Routes>
   );
 };
 

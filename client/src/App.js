@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Container from './components/Container';
 import Router from './Router';
 import Toasty from './components/Toasty/Toasty';
@@ -39,7 +39,7 @@ function App() {
   const [toasty, setToasty] = useState(false)
   const [toastyTimer, setToastyTimer] = useState(0)
 
-    const [isCallable, setIsCallable] = useState(true);
+  const [isCallable, setIsCallable] = useState(true);
 
 
   const userRef = useRef();
@@ -47,7 +47,7 @@ function App() {
   const errRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
-  const history = useHistory();
+  const navigate = useNavigate();
   const loggedIn = Boolean(localStorage.getItem('token'));
   const USER_REGEX = /^[a-zA-Z0-9-_]{3,22}$/;
   const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -107,14 +107,13 @@ function App() {
     })
       .then(response => {
         if (response.data.status === "PENDING") {
-          history.push(`/email-sent/${email}`);
+          navigate(`/email-sent/${email}`);
           window.location.reload();
 
         }
         // localStorage.setItem('token', response.data.token);
-        // history.push('/');
+        // navigate('/');
         // window.location.reload();
-
         dispatchAddNotification({ result: "SUCCESS", message: "A verification email has been sent to your email address!" });
 
       })
@@ -148,8 +147,22 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    history.push('/');
-    window.location.reload();
+    navigate('/');
+    // window.location.reload();
+  }
+
+  const verifyUser = async (userId, uniqueString) => {
+    axios.post('http://localhost:5000/auth/user-verify', {
+      userId,
+      uniqueString
+    })
+      .then(response => {
+        console.log('response: ', response);
+        // dispatchAddNotification({ result: "SUCCESS", message: "Succesfully Logged in!" });
+      })
+      .catch(error => {
+        console.error('dasdasdsaasd', error)
+      });
   }
 
   // VALIDATE THE USERNAME
@@ -250,6 +263,8 @@ function App() {
           showConfirmPassword={showConfirmPassword}
           changePassword={changePassword}
           handlePasswordResetRequest={handlePasswordResetRequest}
+
+          verifyUser={verifyUser}
         ></Router>
       </Container>
     </>

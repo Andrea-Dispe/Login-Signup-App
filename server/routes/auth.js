@@ -9,9 +9,10 @@ router.post('/signup', middlewares.signup, authController.signup);
 
 router.post('/login', middlewares.login, authController.login);
 
-router.get('/user-verify/:userId/:uniqueString', authController.verifyNewUser)
+// route from verification email
+router.get('/user-verify', authController.verifyNewUser)
 
-router.get('/verified', authController.verifyNewUserLandingPage)
+// router.get('/verified', authController.verifyNewUserLandingPage)
 
 router.post('/check-username-exists', authController.checkUsernameExists);
 
