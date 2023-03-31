@@ -1,16 +1,11 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Container from './components/Container';
 import Router from './Router';
-import Toasty from './components/Toasty/Toasty';
 import { useAddNotification } from './components/Notifications/NotificationProvider';
-import debounce from 'lodash.debounce';
-
 
 import './App.css';
 import axios from 'axios';
-
-
 
 function App() {
   const dispatchAddNotification = useAddNotification();
@@ -47,7 +42,7 @@ function App() {
   const errRef = useRef();
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
-  const history = useHistory();
+  const navigate = useNavigate();
   const loggedIn = Boolean(localStorage.getItem('token'));
   const USER_REGEX = /^[a-zA-Z0-9-_]{3,22}$/;
   const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -107,12 +102,12 @@ function App() {
     })
       .then(response => {
         if (response.data.status === "PENDING") {
-          history.push(`/email-sent/${email}`);
+          navigate(`/email-sent/${email}`);
           window.location.reload();
 
         }
         // localStorage.setItem('token', response.data.token);
-        // history.push('/');
+        // navigate('/');
         // window.location.reload();
 
         dispatchAddNotification({ result: "SUCCESS", message: "A verification email has been sent to your email address!" });
@@ -148,13 +143,12 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    history.push('/');
+    navigate('/');
     window.location.reload();
   }
 
   // VALIDATE THE USERNAME
   useEffect(() => {
-    console.log({ email, username });
     if (username.includes('@')) {
       setEmail(username);
     }
