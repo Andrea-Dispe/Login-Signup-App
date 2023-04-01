@@ -119,9 +119,9 @@ exports.login = async (req, res) => {
   }
 
   console.log('user: ', user);
-  return handleError(res, '', 200, 'sdfnsdifpisn');
+  // return handleError(res, '', 200, 'sdfnsdifpisn');
 
-
+return res.json('Success')
   // if (isValid) {
   //   // SIGN THE JWT
   //   const token = await JWT.sign({ username }, 'mysecret', {
@@ -356,7 +356,8 @@ exports.passwordReset = async (req, res) => {
   }
 }
 
-exports.deleteUser = async (req, res) => {
+exports.deleteAccount = async (req, res) => {
+  console.log('<div className="deelting"></div>')
   const { username, email } = req.body;
   console.log('username: ', username);
   console.log('email: ', email);

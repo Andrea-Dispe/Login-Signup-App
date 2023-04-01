@@ -13,7 +13,11 @@ const Router = (props) => {
     <Routes>
       <Route path="/" exact element={
         props.loggedIn ? (
-          <UserLoggedIn handleLogout={props.handleLogout} email={props.email} />
+          <UserLoggedIn
+            handleLogout={props.handleLogout}
+            email={props.email}
+            deleteAccount={props.deleteAccount}
+          />
         ) : (
           <Login
             setUsername={props.setUsername}
@@ -24,6 +28,8 @@ const Router = (props) => {
             handleShowPassword={props.handleShowPassword}
             passwordRef={props.passwordRef}
             showPassword={props.showPassword}
+            loading={props.loading}
+            setLoading={props.setLoading}
           />
         )
       }>
@@ -62,6 +68,8 @@ const Router = (props) => {
           confirmPasswordRef={props.confirmPasswordRef}
           showPassword={props.showPassword}
           showConfirmPassword={props.showConfirmPassword}
+          loading={props.loading}
+          setLoading={props.setLoading}
         />
       }>
       </Route>
@@ -81,6 +89,8 @@ const Router = (props) => {
           handlePasswordResetRequest={props.handlePasswordResetRequest}
           email={props.email}
           setEmail={props.setEmail}
+          loading={props.loading}
+          setLoading={props.setLoading}
         />
       }>
       </Route>
@@ -99,10 +109,12 @@ const Router = (props) => {
           confirmPasswordRef={props.confirmPasswordRef}
           showPassword={props.showPassword}
           showConfirmPassword={props.showConfirmPassword}
-          changePassword={props.changePassword}
+          handleChangePassword={props.handleChangePassword}
           setPasswordFocus={props.setPasswordFocus}
           setPassword={props.setPassword}
           setConfirmPassword={props.setConfirmPassword}
+          loading={props.loading}
+          setLoading={props.setLoading}
         />
       }>
       </Route>

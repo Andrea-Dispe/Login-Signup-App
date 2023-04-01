@@ -1,25 +1,24 @@
-import {useParams} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { FaKey, FaCheck, FaEye, FaEyeSlash } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
-import {handleKeypress} from '../utils/utils'
-
-
+import { handleKeypress } from '../utils/utils'
+import ButtonConfirm from '../components/ButtonConfirm/ButtonConfirm'
 import StrengthMeter from '../components/StrengthMeter/StrengthMeter'
 
 const PasswordReset = (props) => {
-const {resetString, _id} = useParams();
+  const { resetString, _id } = useParams();
 
   return (
     <>
-    <div className="bg-blue-500 mt-7 shadow-2xl xs:rounded-t-xl sm:rounded-xl xs:h-48 sm:h-96">
-      <div className="p-5 text-white">
-        <h1 className="text-5xl">Welcome</h1>
+      <div className="bg-blue-500 mt-7 shadow-2xl xs:rounded-t-xl sm:rounded-xl xs:h-48 sm:h-96">
+        <div className="p-5 text-white">
+          <h1 className="text-5xl">Welcome</h1>
+        </div>
       </div>
-    </div>
-    <div className="flex items-center justify-center flex-col shadow-xl bg-white sm:rounded-xl p-2 sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
-      <h2 className="text-blue-500 m-9 text-2xl font-bold w-15">Reset Password</h2>
-      <div className='auth-input-container'>
+      <div className="flex items-center justify-center flex-col shadow-xl bg-white sm:rounded-xl p-2 sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
+        <h2 className="text-blue-500 m-9 text-2xl font-bold w-15">Reset Password</h2>
+        <div className='auth-input-container'>
           <FaKey className="auth-icon" size='20px' />
           <input
             ref={props.passwordRef}
@@ -32,7 +31,7 @@ const {resetString, _id} = useParams();
             onFocus={() => props.setPasswordFocus(true)}
             onBlur={() => props.setPasswordFocus(false)}
             maxLength={40}
-            onKeyPress={(e) => handleKeypress(e, props.changePassword)}
+            onKeyPress={(e) => handleKeypress(e, props.handleChangePassword)}
           />
           {
             props.showPassword ? <FaEyeSlash className="auth-icon-password-eye" style={props.password.length > 0 ? { 'marginRight': '22px' } : ''} onClick={() => props.handleShowPassword(props.passwordRef)} />
@@ -67,7 +66,7 @@ const {resetString, _id} = useParams();
             required
             onFocus={() => props.setConfirmPasswordFocus(true)}
             onBlur={() => props.setConfirmPasswordFocus(false)}
-            onKeyPress={(e) => handleKeypress(e, props.changePassword)}
+            onKeyPress={(e) => handleKeypress(e, props.handleChangePassword)}
 
           />
           {
@@ -86,22 +85,21 @@ const {resetString, _id} = useParams();
           </div>
         </div>
 
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white w-full mt-7 mb-1 focus:outline-none xs:text-lg sm:text-xs xs:rounded  p-2"
-          onClick={() => props.changePassword(_id, resetString)}
-        >
-        CHANGE PASSWORD
-      </button>
-      <div>
-        <p className="text-xs mt-2">
-          <Link to='/' className="text-blue-500 mb-5 text-xs">
-            LOGIN
-          </Link>
-        </p>
+        <ButtonConfirm
+          loading={props.loading}
+          cb={() => props.handleChangePassword(_id, resetString)}
+          text="CHANGE PASSWORD"
+        />
+        <div>
+          <p className="text-xs mt-2">
+            <Link to='/' className="text-blue-500 mb-5 text-xs">
+              LOGIN
+            </Link>
+          </p>
+        </div>
       </div>
-    </div>
-  </>
-   );
+    </>
+  );
 }
 
 export default PasswordReset;

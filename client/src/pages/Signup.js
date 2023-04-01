@@ -5,13 +5,14 @@ import { ImCross } from "react-icons/im";
 import StrengthMeter from '../components/StrengthMeter/StrengthMeter'
 import BackgroundBox from '../components/BackgroundBox/BackgroundBox'
 import { handleKeypress } from '../utils/utils'
+import ButtonConfirm from '../components/ButtonConfirm/ButtonConfirm'
 
 import "./Signup.css";
-
 
 const SignUp = (props) => {
 
   useEffect(() => {
+    console.log('props.loading: ', props.loading);
     return () => {
       props.setEmail('');
       props.setUsername('');
@@ -161,12 +162,11 @@ const SignUp = (props) => {
           </div>
         </div>
 
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white w-full mt-7 mb-1 focus:outline-none xs:text-lg sm:text-xs xs:rounded  p-2"
-          onClick={props.handleSignup}
-        >
-          REGISTER
-        </button>
+        <ButtonConfirm
+          loading={props.loading}
+          cb={props.handleSignup}
+          text="REGISTER"
+        />
         <div>
           <p className="text-xs mt-2">
             Already registered?{' '}

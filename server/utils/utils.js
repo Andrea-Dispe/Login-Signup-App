@@ -63,9 +63,9 @@ exports.sendVerificationEmail = async ({ _id, username, email }, res) => {
     return handleError(res, error, 401, errors.signup.E_SG1005.msg)
   }
 
-  if (info?.rejected.length === 0) {
+  if (info.rejected.length === 0) {
     return true
-  } else if (info?.rejected.length > 0 || !info) {
+  } else if (info.rejected.length > 0 || !info) {
     return false
   }
 }
@@ -137,9 +137,9 @@ exports.sendPasswordResetEmail = async ({ _id, email, username }, redirectUrl, r
     return handleError(res, error, 401, errors.passwordReset.E_PR1007.msg)
   }
 
-  if (info?.rejected.length === 0) {
+  if (info.rejected.length === 0) {
     return true
-  } else if (info?.rejected.length > 0 || !info) {
+  } else if (info.rejected.length > 0 || !info) {
     return false
   }
 

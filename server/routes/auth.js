@@ -21,6 +21,6 @@ router.post('/request-password-reset', middlewares.requestPasswordReset, authCon
 
 router.post('/password-reset', authController.passwordReset)
 
-router.delete('/delete-user', authController.deleteUser)
+router.post('/delete-account', authController.deleteAccount)
 
 module.exports = router;

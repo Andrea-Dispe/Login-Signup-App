@@ -2,19 +2,19 @@ import { useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import { FaUserAlt, FaKey, FaEye, FaEyeSlash } from "react-icons/fa";
 import { handleKeypress } from '../utils/utils'
+import ButtonConfirm from '../components/ButtonConfirm/ButtonConfirm'
 import "./Login.css"
-import ClipLoader from "react-spinners/ClipLoader";
 
 
-const Login = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isValidLogin, username, password, setIsValidLogin, passwordRef, handleShowPassword, showPassword }) => {
+const Login = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isValidLogin, username, password, setIsValidLogin, passwordRef, handleShowPassword, showPassword, loading, setLoading, }) => {
 
-  useEffect(() => {
-    return () => {
-      setUsername('');
-      setEmail('');
-      setPassword('');
-    }
-  }, [])
+  // useEffect(() => {
+  //   return () => {
+  //     setUsername('');
+  //     setEmail('');
+  //     setPassword('');
+  //   }
+  // }, [])
 
 
 
@@ -57,20 +57,11 @@ const Login = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isVal
               : <FaEye className="auth-icon-password-eye" onClick={() => handleShowPassword(passwordRef)} />
           }
         </div>
-        <button
-          className={`text-white w-full mt-16 mb-1 focus:outline-none xs:text-lg sm:text-xs xs:rounded p-2 bg-blue-500 hover:bg-blue-700`}
-          onClick={handleLogin}
-          // style={{height: '50px'}}
-        >LOGIN
-          <ClipLoader
-            color={'white'}
-            // loading={loading}
-            size={18}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-            // style={{textAlign: 'center'}}
-          />
-        </button>
+        <ButtonConfirm
+          loading={loading}
+          cb={handleLogin}
+          text="LOGIN"
+        />
         <div>
           <p className="text-xs mt-2">
             <Link to='/password-reset-request' className="text-blue-500 mb-5 text-xs">

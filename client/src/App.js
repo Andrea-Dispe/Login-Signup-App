@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect} from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Router from './Router';
@@ -9,6 +9,9 @@ import './App.css';
 
 function App() {
   const dispatchAddNotification = useAddNotification();
+
+  const [loading, setLoading] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(false)
 
   const [username, setUsername] = useState('');
   const [validUsername, setValidUsername] = useState(false);
@@ -38,7 +41,7 @@ function App() {
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
   const navigate = useNavigate();
-  const loggedIn = Boolean(localStorage.getItem('token'));
+  // let loggedIn = Boolean(localStorage.getItem('token'));
   const USER_REGEX = /^[a-zA-Z0-9-_]{3,22}$/;
   const EMAIL_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
   const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#?&*()$%]).{3,24}$/;
@@ -63,26 +66,32 @@ function App() {
   }
 
   const handlePasswordResetRequest = () => {
+    setLoading(true)
     const redirectUrl = 'http://localhost:3000/password-reset';
 
     axios.post('http://localhost:5000/auth/request-password-reset', { email, redirectUrl })
       .then(response => {
+        setLoading(false)
         if (response.data.status === "PENDING") {
           navigate(`/confirmation/reset-password-email/${email}`);
           window.location.reload();
         }
       })
       .catch(error => {
+        setLoading(false)
         handleError(error)
       });
   }
 
-  const changePassword = (_id, resetString) => {
+  const handleChangePassword = (_id, resetString) => {
+    setLoading(true)
     const userId = _id;
     const newPassword = password
     axios.post('http://localhost:5000/auth/password-reset', { userId, resetString, newPassword })
       .then(response => {
         // dispatchAddNotification({ result: "SUCCESS", message: response.data.msg });
+        setLoading(false)
+
         if (response.data.status === "SUCCESS") {
           navigate(`/confirmation/password-changed`);
           window.location.reload();
@@ -91,11 +100,13 @@ function App() {
         setConfirmPassword("")
       })
       .catch(error => {
+        setLoading(false)
         handleError(error)
       });
   }
 
   const handleSignup = () => {
+    setLoading(true)
     axios.post('http://localhost:5000/auth/signup', {
       username,
       email,
@@ -104,25 +115,34 @@ function App() {
     })
       .then(response => {
         if (response.data.status === "PENDING") {
+          setLoading(false)
           navigate(`/confirmation/confirm-email/${email}`);
           window.location.reload();
         }
         dispatchAddNotification({ result: "SUCCESS", message: "A verification email has been sent to your email address!" });
       })
       .catch(error => {
+        setLoading(false)
         handleError(error)
       });
   }
 
   const handleLogin = () => {
+    setLoading(true)
     axios.post('http://localhost:5000/auth/login', {
       username,
       password
     })
       .then(response => {
+        console.log('response: ', response);
+        setLoggedIn(true);
+        setLoading(false)
         dispatchAddNotification({ result: "SUCCESS", message: "Succesfully Logged in!" });
+        // navigate(`/confirmation/confirm-email/${email}`);
+        // window.location.reload();
       })
       .catch(error => {
+        setLoading(false)
         handleError(error);
       });
   }
@@ -140,6 +160,30 @@ function App() {
     localStorage.removeItem('token');
     navigate('/');
     window.location.reload();
+  }
+
+  const deleteAccount = (email) => {
+    setLoading(true)
+    console.log('deleting back')
+
+
+
+    axios.post('http://localhost:5000/auth/delete-account', {
+      email
+    })
+      .then(response => {
+        console.log('response: ', response);
+        // setLoggedIn(false);
+        // setLoading(false)
+        // window.location.reload();
+
+        // dispatchAddNotification({ result: "SUCCESS", message: "Succesfully Logged in!" });
+      })
+      .catch(error => {
+        console.log('error: ', error);
+        setLoading(false)
+        // handleError(error);
+      });
   }
 
   // VALIDATE THE USERNAME
@@ -238,8 +282,12 @@ function App() {
           confirmPasswordRef={confirmPasswordRef}
           showPassword={showPassword}
           showConfirmPassword={showConfirmPassword}
-          changePassword={changePassword}
+          handleChangePassword={handleChangePassword}
           handlePasswordResetRequest={handlePasswordResetRequest}
+
+          loading={loading}
+          setLoading={setLoading}
+          deleteAccount={deleteAccount}
         ></Router>
       </Container>
     </>

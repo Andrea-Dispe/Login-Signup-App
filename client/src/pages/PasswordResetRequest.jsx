@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom';
 import { FaEnvelope} from "react-icons/fa";
 import BackgroundBox from '../components/BackgroundBox/BackgroundBox'
 import { handleKeypress } from '../utils/utils'
+import ButtonConfirm from '../components/ButtonConfirm/ButtonConfirm'
 
 
-const PasswordResetRequest = ({ handlePasswordResetRequest, email, setEmail }) => {
+const PasswordResetRequest = ({ handlePasswordResetRequest, email, setEmail, loading }) => {
 
   useEffect(() => {
     return () => {
@@ -33,12 +34,11 @@ const PasswordResetRequest = ({ handlePasswordResetRequest, email, setEmail }) =
           />
         </div>
 
-        <button
-          className={`text-white w-full mb-1 focus:outline-none xs:text-lg sm:text-xs xs:rounded p-2 bg-blue-500 hover:bg-blue-700`}
-          onClick={handlePasswordResetRequest}
-        >
-          REQUEST NEW PASSWORD
-        </button>
+        <ButtonConfirm
+          loading={loading}
+          cb={handlePasswordResetRequest}
+          text="REQUEST NEW PASSWORD"
+        />
         <div>
           <p className="text-xs mt-2">
             <Link to='/' className="text-blue-500 mb-5 text-xs">
