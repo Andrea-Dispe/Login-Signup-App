@@ -173,8 +173,6 @@ function App() {
         setLoading(false)
         dispatchAddNotification({ result: "SUCCESS", message: response.data.msg });
         navigate('/');
-
-        // window.location.reload();
       })
       .catch(error => {
         console.log('error: ', error);
