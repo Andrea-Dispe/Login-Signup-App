@@ -1,4 +1,4 @@
-exports.login = require('./login');
-exports.signup = require('./signup');
-exports.passwordReset = require('./passwordReset');
-exports.verifyUser = require('./verifyUser');
+exports.login = require('./errorsLists/login');
+exports.signup = require('./errorsLists/signup');
+exports.passwordReset = require('./errorsLists/passwordReset');
+exports.verifyUser = require('./errorsLists/verifyUser');

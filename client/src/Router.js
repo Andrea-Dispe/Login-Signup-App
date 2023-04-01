@@ -16,7 +16,8 @@ const Router = (props) => {
           <UserLoggedIn
             handleLogout={props.handleLogout}
             email={props.email}
-            deleteAccount={props.deleteAccount}
+            handleDeleteAccount={props.handleDeleteAccount}
+            loading={props.loading} 
           />
         ) : (
           <Login

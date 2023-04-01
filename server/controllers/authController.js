@@ -121,7 +121,7 @@ exports.login = async (req, res) => {
   console.log('user: ', user);
   // return handleError(res, '', 200, 'sdfnsdifpisn');
 
-return res.json('Success')
+  return res.json('Success')
   // if (isValid) {
   //   // SIGN THE JWT
   //   const token = await JWT.sign({ username }, 'mysecret', {
@@ -357,29 +357,28 @@ exports.passwordReset = async (req, res) => {
 }
 
 exports.deleteAccount = async (req, res) => {
-  console.log('<div className="deelting"></div>')
+
+  console.log('inside delete auth')
+
   const { username, email } = req.body;
   console.log('username: ', username);
   console.log('email: ', email);
   try {
     const deletedUser = await User.deleteOne(username ? { username } : { email })
     console.log('deletedUser: ', deletedUser);
+
     if (deletedUser.deletedCount > 0) {
       res.status(200).send({
         msg: `This user has been delete from the DB}`,
         status: "SUCCESS"
       });
-    } res.status(202).send({
-      msg: `This user does not exist in the DB}`,
-      status: "SUCCESS"
-    });
+    } else {
+      res.status(202).send({
+        msg: `This user does not exist in the DB`,
+        status: "SUCCESS"
+      });
+    }
   } catch (error) {
-    res.status(400).send({
-      errors: [{
-        error,
-        msg,
-        status: "FAILED"
-      }]
-    });
+    return handleError(res, error, 400, errors.passwordReset.E_U1001.msg);
   }
 }

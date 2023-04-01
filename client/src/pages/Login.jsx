@@ -8,16 +8,6 @@ import "./Login.css"
 
 const Login = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isValidLogin, username, password, setIsValidLogin, passwordRef, handleShowPassword, showPassword, loading, setLoading, }) => {
 
-  // useEffect(() => {
-  //   return () => {
-  //     setUsername('');
-  //     setEmail('');
-  //     setPassword('');
-  //   }
-  // }, [])
-
-
-
   return (
     <>
       <div className="bg-blue-500 mt-7 shadow-2xl xs:rounded-t-xl sm:rounded-xl xs:h-48 sm:h-96">

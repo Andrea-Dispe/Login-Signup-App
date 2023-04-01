@@ -162,22 +162,19 @@ function App() {
     window.location.reload();
   }
 
-  const deleteAccount = (email) => {
+  const handleDeleteAccount = (email) => {
     setLoading(true)
-    console.log('deleting back')
-
-
-
     axios.post('http://localhost:5000/auth/delete-account', {
       email
     })
       .then(response => {
         console.log('response: ', response);
-        // setLoggedIn(false);
-        // setLoading(false)
-        // window.location.reload();
+        setLoggedIn(false);
+        setLoading(false)
+        dispatchAddNotification({ result: "SUCCESS", message: response.data.msg });
+        navigate('/');
 
-        // dispatchAddNotification({ result: "SUCCESS", message: "Succesfully Logged in!" });
+        // window.location.reload();
       })
       .catch(error => {
         console.log('error: ', error);
@@ -287,7 +284,7 @@ function App() {
 
           loading={loading}
           setLoading={setLoading}
-          deleteAccount={deleteAccount}
+          handleDeleteAccount={handleDeleteAccount}
         ></Router>
       </Container>
     </>
