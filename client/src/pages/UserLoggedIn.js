@@ -7,7 +7,7 @@ const username = localStorage.getItem('username')
     <>
       <div className="bg-blue-500 mt-7 shadow-2xl xs:rounded-t-xl sm:rounded-xl xs:h-48 sm:h-96">
         <div className="p-5 text-white">
-          <h1 className="text-5xl">Benvenuto</h1>
+          <h1 className="text-5xl">Welcome</h1>
           <p className="text-3xl mt-9">{username}</p>
         </div>
       </div>

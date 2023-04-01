@@ -1,19 +1,20 @@
 import {useParams} from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { FaUserAlt, FaEnvelope, FaKey, FaCheck, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaKey, FaCheck, FaEye, FaEyeSlash } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
+import {handleKeypress} from '../utils/utils'
+
 
 import StrengthMeter from '../components/StrengthMeter/StrengthMeter'
 
 const PasswordReset = (props) => {
 const {resetString, _id} = useParams();
-console.log({resetString, _id});
 
   return (
     <>
     <div className="bg-blue-500 mt-7 shadow-2xl xs:rounded-t-xl sm:rounded-xl xs:h-48 sm:h-96">
       <div className="p-5 text-white">
-        <h1 className="text-5xl">Benvenuto</h1>
+        <h1 className="text-5xl">Welcome</h1>
       </div>
     </div>
     <div className="flex items-center justify-center flex-col shadow-xl bg-white sm:rounded-xl p-2 sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
@@ -31,6 +32,7 @@ console.log({resetString, _id});
             onFocus={() => props.setPasswordFocus(true)}
             onBlur={() => props.setPasswordFocus(false)}
             maxLength={40}
+            onKeyPress={(e) => handleKeypress(e, props.changePassword)}
           />
           {
             props.showPassword ? <FaEyeSlash className="auth-icon-password-eye" style={props.password.length > 0 ? { 'marginRight': '22px' } : ''} onClick={() => props.handleShowPassword(props.passwordRef)} />
@@ -65,6 +67,8 @@ console.log({resetString, _id});
             required
             onFocus={() => props.setConfirmPasswordFocus(true)}
             onBlur={() => props.setConfirmPasswordFocus(false)}
+            onKeyPress={(e) => handleKeypress(e, props.changePassword)}
+
           />
           {
             props.showConfirmPassword ? <FaEyeSlash className="auth-icon-password-eye" style={props.confirmPassword.length > 0 ? { 'marginRight': '22px' } : ''} onClick={() => props.handleShowPassword(props.confirmPasswordRef)} />

@@ -1,21 +1,28 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { faCheck, faXmark} from '@fortawesome/free-solid-svg-icons'
-import StrengthMeter from '../components/StrengthMeter/StrengthMeter'
 import { FaUserAlt, FaEnvelope, FaKey, FaCheck, FaEye, FaEyeSlash } from "react-icons/fa";
 import { ImCross } from "react-icons/im";
+import StrengthMeter from '../components/StrengthMeter/StrengthMeter'
+import BackgroundBox from '../components/BackgroundBox/BackgroundBox'
+import { handleKeypress } from '../utils/utils'
+
 import "./Signup.css";
 
 
 const SignUp = (props) => {
 
+  useEffect(() => {
+    return () => {
+      props.setEmail('');
+      props.setUsername('');
+      props.setPassword('');
+      props.setConfirmPassword('');
+    }
+  }, [])
+
   return (
     <>
-      <div className="bg-blue-500 mt-7 shadow-2xl xs:rounded-t-xl sm:rounded-xl xs:h-48 sm:h-96">
-        <div className="p-5 text-white">
-          <h1 className="text-5xl">Welcome</h1>
-        </div>
-      </div>
+      <BackgroundBox />
 
       <div className="flex justify-center items-center flex-col shadow-xl bg-white sm:rounded-xl p-2 sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
         <h2 className="text-blue-500 m-1 text-2xl font-bold w-15 pb-7">Sign Up</h2>
@@ -33,6 +40,8 @@ const SignUp = (props) => {
             onBlur={() => props.setEmailFocus(false)}
             maxLength={45}
             required
+            onKeyPress={(e) => handleKeypress(e, props.handleSignup)}
+
           />
           <span className={
             props.emailFocus &&
@@ -64,6 +73,8 @@ const SignUp = (props) => {
             onFocus={() => props.setUserFocus(true)}
             onBlur={() => props.setUserFocus(false)}
             maxLength={23}
+            onKeyPress={(e) => handleKeypress(e, props.handleSignup)}
+
           />
           <span className={
             props.userFocus &&
@@ -96,6 +107,8 @@ const SignUp = (props) => {
             onFocus={() => props.setPasswordFocus(true)}
             onBlur={() => props.setPasswordFocus(false)}
             maxLength={40}
+            onKeyPress={(e) => handleKeypress(e, props.handleSignup)}
+
           />
           {
             props.showPassword ? <FaEyeSlash className="auth-icon-password-eye" style={props.password.length > 0 ? { 'marginRight': '22px' } : ''} onClick={() => props.handleShowPassword(props.passwordRef)} />
@@ -130,6 +143,7 @@ const SignUp = (props) => {
             required
             onFocus={() => props.setConfirmPasswordFocus(true)}
             onBlur={() => props.setConfirmPasswordFocus(false)}
+            onKeyPress={(e) => handleKeypress(e, props.handleSignup)}
           />
           {
             props.showConfirmPassword ? <FaEyeSlash className="auth-icon-password-eye" style={props.confirmPassword.length > 0 ? { 'marginRight': '22px' } : ''} onClick={() => props.handleShowPassword(props.confirmPasswordRef)} />

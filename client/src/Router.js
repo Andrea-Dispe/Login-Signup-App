@@ -1,10 +1,9 @@
-import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import UserLoggedIn from './pages/UserLoggedIn';
 import SignUp from './pages/Signup';
 import Login from './pages/Login.jsx';
-import EmailSent from "./pages/EmailSent";
+import Confirmation from "./pages/Confirmation";
 import PasswordResetRequest from "./pages/PasswordResetRequest"
 import PasswordReset from "./pages/PasswordReset"
 
@@ -19,6 +18,7 @@ const Router = (props) => {
           <Login
             setUsername={props.setUsername}
             userRef={props.userRef}
+            setEmail={props.setEmail}
             setPassword={props.setPassword}
             handleLogin={props.handleLogin}
             handleShowPassword={props.handleShowPassword}
@@ -66,8 +66,13 @@ const Router = (props) => {
       }>
       </Route>
 
-      <Route path="/email-sent/:email" element={
-        <EmailSent />
+      <Route path="/confirmation/:action/:email" element={
+        <Confirmation />
+      }>
+      </Route>
+
+      <Route path="/confirmation/:action" element={
+        <Confirmation />
       }>
       </Route>
 

@@ -16,7 +16,6 @@ const errors = require('../utils/errors')
 
 exports.signup = async (req, res) => {
   const { username, email, password } = req.body;
-  console.log('------------------------------------------------------------------------------------------')
 
   // VALIDATE INPUT
   const hasErrors = validationResult(req);
@@ -255,6 +254,13 @@ exports.checkEmailExists = async (req, res) => {
 
 exports.requestPasswordReset = async (req, res) => {
   const { email, redirectUrl } = req.body;
+  const hasErrors = validationResult(req);
+
+  // VALIDATE INPUTS
+  if (!hasErrors.isEmpty()) {
+    return handleError(res, hasErrors.array(), 401);
+  }
+
   // CHECK IF USER EXISTS
   let user;
   try {
@@ -287,8 +293,6 @@ exports.requestPasswordReset = async (req, res) => {
 
 exports.passwordReset = async (req, res) => {
   let { userId, resetString, newPassword } = req.body;
-  console.log('inside change password rest')
-  console.log('req.bpdy: ', req.body);
 
   // GET THE PASSWORD RESET DOC ASSOCIATED TO THE USER ID
   let passwordResetDoc;
@@ -300,7 +304,6 @@ exports.passwordReset = async (req, res) => {
   if (!passwordResetDoc) {
     return handleError(res, '', 400, errors.passwordReset.E_PR1009.msg);
   }
-  console.log('passwordResetDoc: ', passwordResetDoc);
 
   // CHECK THAT THE PASSWORD RESET IS NOT EXPIRED
   const { expiresAt, } = passwordResetDoc;
@@ -308,7 +311,6 @@ exports.passwordReset = async (req, res) => {
     try {
       // DELETE THE EXPIRED PASSWORD RESET DOC
       const deletedPasswordResetDoc = await PasswordReset.deleteOne({ userId })
-      console.log('deletedPasswordResetDoc: ', deletedPasswordResetDoc);
       return handleError(res, errors.passwordReset.E_PR1011.desc, 400, errors.passwordReset.E_PR1011.msg);
     } catch (error) {
       return handleError(res, error, 400, errors.passwordReset.E_PR1010.msg);

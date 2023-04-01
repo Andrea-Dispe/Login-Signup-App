@@ -1,11 +1,11 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
-import Container from './components/Container';
+import axios from 'axios';
 import Router from './Router';
+import Container from './components/Container/Container';
 import { useAddNotification } from './components/Notifications/NotificationProvider';
 
 import './App.css';
-import axios from 'axios';
 
 function App() {
   const dispatchAddNotification = useAddNotification();
@@ -31,11 +31,6 @@ function App() {
   const [emailExists, setEmailExists] = useState(false)
 
   const [isValidLogin, setIsValidLogin] = useState(false);
-  const [toasty, setToasty] = useState(false)
-  const [toastyTimer, setToastyTimer] = useState(0)
-
-    const [isCallable, setIsCallable] = useState(true);
-
 
   const userRef = useRef();
   // errRef will be used to put focus on it when it occurs so that it can be announced by screen readers for accessibility
@@ -45,7 +40,7 @@ function App() {
   const navigate = useNavigate();
   const loggedIn = Boolean(localStorage.getItem('token'));
   const USER_REGEX = /^[a-zA-Z0-9-_]{3,22}$/;
-  const EMAIL_REGEX = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  const EMAIL_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
   const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#?&*()$%]).{3,24}$/;
 
   const handleShowPassword = (ref) => {
@@ -69,10 +64,13 @@ function App() {
 
   const handlePasswordResetRequest = () => {
     const redirectUrl = 'http://localhost:3000/password-reset';
+
     axios.post('http://localhost:5000/auth/request-password-reset', { email, redirectUrl })
       .then(response => {
-        dispatchAddNotification({ result: "SUCCESS", message: response.data.msg });
-        setEmail("")
+        if (response.data.status === "PENDING") {
+          navigate(`/confirmation/reset-password-email/${email}`);
+          window.location.reload();
+        }
       })
       .catch(error => {
         handleError(error)
@@ -84,7 +82,11 @@ function App() {
     const newPassword = password
     axios.post('http://localhost:5000/auth/password-reset', { userId, resetString, newPassword })
       .then(response => {
-        dispatchAddNotification({ result: "SUCCESS", message: response.data.msg });
+        // dispatchAddNotification({ result: "SUCCESS", message: response.data.msg });
+        if (response.data.status === "SUCCESS") {
+          navigate(`/confirmation/password-changed`);
+          window.location.reload();
+        }
         setPassword("");
         setConfirmPassword("")
       })
@@ -102,16 +104,10 @@ function App() {
     })
       .then(response => {
         if (response.data.status === "PENDING") {
-          navigate(`/email-sent/${email}`);
+          navigate(`/confirmation/confirm-email/${email}`);
           window.location.reload();
-
         }
-        // localStorage.setItem('token', response.data.token);
-        // navigate('/');
-        // window.location.reload();
-
         dispatchAddNotification({ result: "SUCCESS", message: "A verification email has been sent to your email address!" });
-
       })
       .catch(error => {
         handleError(error)
@@ -132,7 +128,6 @@ function App() {
   }
 
   const handleError = (error) => {
-    console.error("ERROR: ", error)
     if (error.code === "ERR_NETWORK") {
       dispatchAddNotification({ result: "ERROR", message: "There is a problem with the connection to the server. Please try again" });
     } else {
@@ -153,6 +148,7 @@ function App() {
       setEmail(username);
     }
     // check if username matches the regexp. It returns a boolean value
+
     const result = USER_REGEX.test(username)
     let checkUsernameExists = setTimeout(() => {
       axios.post('http://localhost:5000/auth/check-username-exists', {
@@ -197,7 +193,7 @@ function App() {
   useEffect(() => {
     const result = PWD_REGEX.test(password);
     setValidPassword(result);
-    (password.length > 0 || confirmPassword.length > 0) && setValidConfirmPassword(password === confirmPassword)
+    (password.length > 0 && confirmPassword.length > 0) && setValidConfirmPassword(password === confirmPassword)
   }, [password, confirmPassword])
 
   return (

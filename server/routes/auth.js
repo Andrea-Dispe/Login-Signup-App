@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const authController = require('../controllers/authController');
 const middlewares = require('../middlewares/middlewares')
-// console.log('middlewares: ', middlewares);
+
 // express-validator will run middlewares Validators and/or Sanitizers functions
 // the middlewares need to be wrapped inside an array. Chekc takes the req field as string
 // as first parameter and a custom error message as second param
@@ -17,7 +17,7 @@ router.post('/check-username-exists', authController.checkUsernameExists);
 
 router.post('/check-email-exists', authController.checkEmailExists);
 
-router.post('/request-password-reset', authController.requestPasswordReset)
+router.post('/request-password-reset', middlewares.requestPasswordReset, authController.requestPasswordReset)
 
 router.post('/password-reset', authController.passwordReset)
 
