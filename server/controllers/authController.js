@@ -114,11 +114,9 @@ exports.login = async (req, res) => {
 
   // CHECK IF USER IS VERIFIED
   if (!user.verified) {
-    console.log('user.verified: ', user.verified);
     return handleError(res, 'User not verified yet', 401, errors.login.E_LG1004.msg);
   }
 
-  console.log('user: ', user);
   // return handleError(res, '', 200, 'sdfnsdifpisn');
 
   return res.json('Success')
@@ -142,7 +140,6 @@ exports.verifyNewUser = async (req, res) => {
   } catch (error) {
     // handleError(res, error, 400, errors.signup.E_SG1008.msg)
     const message = "Error occured while looking for the verification"
-    console.log('message: ', message);
     return res.redirect(`/auth/verified/error=true&message=${message}`)
   }
 
@@ -357,19 +354,14 @@ exports.passwordReset = async (req, res) => {
 }
 
 exports.deleteAccount = async (req, res) => {
-
-  console.log('inside delete auth')
-
   const { username, email } = req.body;
-  console.log('username: ', username);
-  console.log('email: ', email);
+
   try {
     const deletedUser = await User.deleteOne(username ? { username } : { email })
-    console.log('deletedUser: ', deletedUser);
 
     if (deletedUser.deletedCount > 0) {
       res.status(200).send({
-        msg: `This user has been delete from the DB}`,
+        msg: `This user has been deleted from the DB`,
         status: "SUCCESS"
       });
     } else {

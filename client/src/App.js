@@ -46,6 +46,18 @@ function App() {
   const EMAIL_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
   const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#?&*()$%]).{3,24}$/;
 
+
+  const getUsername = () => {
+    axios.post('http://localhost:5000/user/get-username', { email})
+      .then(response => {
+        console.log('response: ', response);
+        setUsername(response.data.username)
+      })
+      .catch(error => {
+        handleError(error)
+      });
+  }
+
   const handleShowPassword = (ref) => {
     if (ref.current.id === 'password') {
       SetShowPassword(prev => !prev)
@@ -128,10 +140,11 @@ function App() {
   }
 
   const handleLogin = () => {
+    setEmail('dispeandrea@gmail.com')
     setLoading(true)
     axios.post('http://localhost:5000/auth/login', {
-      username,
-      password
+      username :'dispeandrea@gmail.com',
+      password : 'Projektor#000'
     })
       .then(response => {
         console.log('response: ', response);
@@ -168,16 +181,14 @@ function App() {
       email
     })
       .then(response => {
-        console.log('response: ', response);
         setLoggedIn(false);
         setLoading(false)
         dispatchAddNotification({ result: "SUCCESS", message: response.data.msg });
         navigate('/');
       })
       .catch(error => {
-        console.log('error: ', error);
         setLoading(false)
-        // handleError(error);
+        handleError(error);
       });
   }
 
@@ -283,6 +294,7 @@ function App() {
           loading={loading}
           setLoading={setLoading}
           handleDeleteAccount={handleDeleteAccount}
+          getUsername={getUsername}
         ></Router>
       </Container>
     </>

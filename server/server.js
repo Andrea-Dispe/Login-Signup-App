@@ -13,7 +13,8 @@ app.use(cors());
 app.use(express.json());
 // use the auth route for all requests that pass through /auth
 app.use('/auth', require('./routes/auth'));
-app.use('/posts', require('./routes/posts'));
+app.use('/user', require('./routes/user'));
+
 
 app.listen(PORT, () => {
   startDB()

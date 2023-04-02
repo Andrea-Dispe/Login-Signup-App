@@ -17,7 +17,7 @@ const Notification = (props) => {
         clearInterval(id);
         return prev
       })
-    }, 20)
+    }, 30)
     setIntevalID(id)
   }
 
