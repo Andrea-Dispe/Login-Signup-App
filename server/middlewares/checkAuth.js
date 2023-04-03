@@ -1,10 +1,14 @@
 const jwt = require("jsonwebtoken");
+const dotenv = require('dotenv');
+dotenv.config();
 
-module.exports = async (req, res, next) => {
-    const token = req.header('x-auth-token')
+const { JWT_SECRET } = process.env
 
-    // CHECK IF WE EVEN HAVE A TOKEN
-    if(!token){
+const checkAuth = async (req, res, next) => {
+
+   const token = req.header('x-access-token')
+    // CHECK IF WE HAVE A TOKEN
+    if (!token) {
         res.status(401).json({
             errors: [
                 {
@@ -12,19 +16,22 @@ module.exports = async (req, res, next) => {
                 }
             ]
         })
-    }
-
-    try {
-        const user = await jwt.verify(token, "mysecret")
-        req.user = user.email
-        next()
-    } catch (error) {
-        res.status(400).json({
-            errors: [
-                {
-                    msg: 'Invalid Token'
-                }
-            ]
-        })
+    } else {
+        try {
+            const user = await jwt.verify(token, JWT_SECRET)
+            console.log('user in middle: ', user);
+            req.email = user.email
+            next()
+        } catch (error) {
+            res.status(400).json({
+                errors: [
+                    {
+                        msg: 'Invalid Token'
+                    }
+                ]
+            })
+        }
     }
 }
+
+module.exports = checkAuth;

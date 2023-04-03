@@ -1,12 +1,13 @@
 const signup = require('./signup');
 const login = require('./login');
 const requestPasswordReset = require('./requestPasswordReset');
-const deleteAccount = require('./deleteAccount');
+const checkAuth = require('./checkAuth');
+
 
 
 module.exports = {
   signup,
   login,
   requestPasswordReset,
-  deleteAccount
+  checkAuth
 }

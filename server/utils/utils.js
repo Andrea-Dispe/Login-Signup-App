@@ -145,11 +145,11 @@ exports.sendPasswordResetEmail = async ({ _id, email, username }, redirectUrl, r
 
 }
 
-const handleError = (res, error, statusCode, msg="") => {
+const handleError = (res, error, statusCode, msg = "") => {
   console.error('error: ', error);
   console.log('msg: ', msg);
 
-  if(!msg) {
+  if (!msg) {
     return res.status(statusCode).send({
       errors: error
     });

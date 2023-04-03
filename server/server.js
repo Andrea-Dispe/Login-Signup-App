@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const startDB = require('./config/db')
+const cookieParser = require("cookie-parser");
 
 const PORT = 5000;
 // const corsOptions = {
@@ -10,6 +11,7 @@ const PORT = 5000;
 // }
 
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 // use the auth route for all requests that pass through /auth
 app.use('/auth', require('./routes/auth'));

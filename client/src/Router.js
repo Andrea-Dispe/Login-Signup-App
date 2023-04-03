@@ -15,11 +15,10 @@ const Router = (props) => {
         props.loggedIn ? (
           <UserLoggedIn
             handleLogout={props.handleLogout}
-            email={props.email}
             handleDeleteAccount={props.handleDeleteAccount}
             loading={props.loading}
             getUsername={props.getUsername}
-            username={props.username}
+            user={props.user}
           />
         ) : (
           <Login

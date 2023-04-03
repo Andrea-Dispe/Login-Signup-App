@@ -2,5 +2,9 @@
   "E_U1001": {
     "msg": "An error has occured while deleting your account. Please contact the support and provide them with the error code E_U1001",
     "desc": "Error occured while trying to query the DB for the deletion of the user's account."
+  },
+  "E_U1002": {
+    "msg": "An error has occured while deleting your account. Please contact the support and provide them with the error code E_U1002",
+    "desc": "Sorry, we didn't find any user with this username"
   }
 }

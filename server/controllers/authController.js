@@ -1,17 +1,19 @@
 const { validationResult } = require('express-validator');
 const bcrypt = require('bcrypt');
 const JWT = require('jsonwebtoken');
-const nodemailer = require('nodemailer')
-const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 require('dotenv').config();
+
 // MongoDB Models
 const User = require('../models/UsersModel');
 const UserVerification = require('../models/UserVerificationModel');
 const PasswordReset = require('../models/PasswordResetModel');
+
 // Files
 const { sendVerificationEmail, handleError, sendPasswordResetEmail } = require('../utils/utils')
 const errors = require('../utils/errors')
+const { JWT_SECRET } = process.env
+
 
 
 exports.signup = async (req, res) => {
@@ -117,18 +119,49 @@ exports.login = async (req, res) => {
     return handleError(res, 'User not verified yet', 401, errors.login.E_LG1004.msg);
   }
 
-  // return handleError(res, '', 200, 'sdfnsdifpisn');
+  if (isPasswordsValid) {
+    // SIGN THE JWT
+    const token = await JWT.sign({
+      _id: user.id,
+      email: user.email,
+      username: user.username,
+      verified: user.verified
+    }, JWT_SECRET, {
+      expiresIn: 864_000,
+    });
 
-  return res.json('Success')
-  // if (isValid) {
-  //   // SIGN THE JWT
-  //   const token = await JWT.sign({ username }, 'mysecret', {
-  //     expiresIn: 864_000,
-  //   });
-  //   return res.json({ token });
-  // } else {
-  //   return handleError(res, '', 400, 'Username or password is incorrect');
-  // }
+
+    return res
+    .cookie("access_token", token, {
+      httpOnly: true,
+    })
+    .status(200)
+    .json({
+      authenticated: true,
+      token,
+      result: [{
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        verified: user.verified
+      }]
+    });
+
+
+
+    return res.json({
+      authenticated: true,
+      token,
+      result: [{
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        verified: user.verified
+      }]
+    });
+  } else {
+    return handleError(res, 'User not verified yet', 401, errors.login.E_LG1007.msg);
+  }
 }
 
 exports.verifyNewUser = async (req, res) => {
@@ -138,8 +171,7 @@ exports.verifyNewUser = async (req, res) => {
   try {
     verification = await UserVerification.findOne({ userId })
   } catch (error) {
-    // handleError(res, error, 400, errors.signup.E_SG1008.msg)
-    const message = "Error occured while looking for the verification"
+    const message = "Error occured while looking for the verification";
     return res.redirect(`/auth/verified/error=true&message=${message}`)
   }
 
@@ -353,24 +385,3 @@ exports.passwordReset = async (req, res) => {
   }
 }
 
-exports.deleteAccount = async (req, res) => {
-  const { username, email } = req.body;
-
-  try {
-    const deletedUser = await User.deleteOne(username ? { username } : { email })
-
-    if (deletedUser.deletedCount > 0) {
-      res.status(200).send({
-        msg: `This user has been deleted from the DB`,
-        status: "SUCCESS"
-      });
-    } else {
-      res.status(202).send({
-        msg: `This user does not exist in the DB`,
-        status: "SUCCESS"
-      });
-    }
-  } catch (error) {
-    return handleError(res, error, 400, errors.passwordReset.E_U1001.msg);
-  }
-}

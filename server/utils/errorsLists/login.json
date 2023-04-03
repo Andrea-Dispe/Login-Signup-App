@@ -22,6 +22,10 @@
   "E_LG1006": {
     "msg": "The password provided is incorrect. Please try again.",
     "desc": "Error occured the user input a wrong password during login procedure."
+  },
+  "E_LG1007": {
+    "msg": "An error occured while accessing your account. Please contact the support and provide them with the error code E_LG1007",
+    "desc": "The user input a wrong password during login procedure."
   }
 }
 

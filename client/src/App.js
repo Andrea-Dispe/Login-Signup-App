@@ -4,6 +4,7 @@ import axios from 'axios';
 import Router from './Router';
 import Container from './components/Container/Container';
 import { useAddNotification } from './components/Notifications/NotificationProvider';
+import jwt from "jwt-decode"
 
 import './App.css';
 
@@ -11,7 +12,9 @@ function App() {
   const dispatchAddNotification = useAddNotification();
 
   const [loading, setLoading] = useState(false)
-  const [loggedIn, setLoggedIn] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.getItem('token')))
+  const [isValidLogin, setIsValidLogin] = useState(false);
+  const [user, setUser] = useState({});
 
   const [username, setUsername] = useState('');
   const [validUsername, setValidUsername] = useState(false);
@@ -33,7 +36,6 @@ function App() {
   const [emailFocus, setEmailFocus] = useState(false);
   const [emailExists, setEmailExists] = useState(false)
 
-  const [isValidLogin, setIsValidLogin] = useState(false);
 
   const userRef = useRef();
   // errRef will be used to put focus on it when it occurs so that it can be announced by screen readers for accessibility
@@ -47,8 +49,14 @@ function App() {
   const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#?&*()$%]).{3,24}$/;
 
 
+  const options = {
+    headers: {
+      "x-access-token": localStorage.getItem('token')
+    }
+  }
+
   const getUsername = () => {
-    axios.post('http://localhost:5000/user/get-username', { email})
+    axios.post('http://localhost:5000/user/get-username', { email }, options)
       .then(response => {
         console.log('response: ', response);
         setUsername(response.data.username)
@@ -143,16 +151,21 @@ function App() {
     setEmail('dispeandrea@gmail.com')
     setLoading(true)
     axios.post('http://localhost:5000/auth/login', {
-      username :'dispeandrea@gmail.com',
-      password : 'Projektor#000'
+      username: 'dispeandrea@gmail.com',
+      password: 'Projektor#000'
     })
       .then(response => {
-        console.log('response: ', response);
-        setLoggedIn(true);
-        setLoading(false)
-        dispatchAddNotification({ result: "SUCCESS", message: "Succesfully Logged in!" });
-        // navigate(`/confirmation/confirm-email/${email}`);
-        // window.location.reload();
+        const currentUser = jwt(response.data.token);
+        // store all user information from the JWT
+        if (currentUser) {
+          setUser(currentUser);
+        }
+        if (response.data.authenticated) {
+          localStorage.setItem('token', response.data.token)
+          setLoggedIn(true);
+          setLoading(false)
+          dispatchAddNotification({ result: "SUCCESS", message: "Succesfully Logged in!" });
+        }
       })
       .catch(error => {
         setLoading(false)
@@ -177,14 +190,21 @@ function App() {
 
   const handleDeleteAccount = (email) => {
     setLoading(true)
-    axios.post('http://localhost:5000/auth/delete-account', {
-      email
-    })
+    axios.post('http://localhost:5000/user/delete-account', {
+      username: user.username,
+      email: user.email
+    }, options)
       .then(response => {
-        setLoggedIn(false);
-        setLoading(false)
-        dispatchAddNotification({ result: "SUCCESS", message: response.data.msg });
-        navigate('/');
+        if(response.data.status === 'SUCCESS') {
+          localStorage.removeItem('token');
+          setLoggedIn(false);
+          setLoading(false)
+          dispatchAddNotification({ result: response.data.status, message: response.data.msg });
+          navigate('/');
+        }else {
+          setLoading(false)
+          dispatchAddNotification({ result: response.data.status, message: response.data.msg });
+        }
       })
       .catch(error => {
         setLoading(false)
@@ -295,6 +315,7 @@ function App() {
           setLoading={setLoading}
           handleDeleteAccount={handleDeleteAccount}
           getUsername={getUsername}
+          user={user}
         ></Router>
       </Container>
     </>
