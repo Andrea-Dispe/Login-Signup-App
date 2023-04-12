@@ -9,7 +9,7 @@ import vars from './config'
 
 import './App.css';
 
-const { port, host, apiPort, env } = vars;
+const { api, env } = vars;
 
 function App() {
   const dispatchAddNotification = useAddNotification();
@@ -57,14 +57,6 @@ function App() {
     }
   }
 
-  let api;
-  if (env === 'Development') {
-    api = `${host}:${apiPort}`
-  }
-  if (env === 'Production') {
-    api = `${host}`
-  }
-
   const handleShowPassword = (ref) => {
     if (ref.current.id === 'password') {
       SetShowPassword(prev => !prev)
@@ -86,7 +78,7 @@ function App() {
 
   const handlePasswordResetRequest = () => {
     setLoading(true)
-    const redirectUrl = `${host}/${port}`;
+    const redirectUrl = `${api}`;
 
     axios.post(`${api}/auth/request-password-reset`, { email, redirectUrl })
       .then(response => {
@@ -125,6 +117,7 @@ function App() {
 
   const handleSignup = () => {
     setLoading(true)
+
     axios.post(`${api}/auth/signup`, {
       username,
       email,
@@ -132,6 +125,7 @@ function App() {
       confirmPassword
     })
       .then(response => {
+        console.log('response: ', response);
         if (response.data.status === "PENDING") {
           setLoading(false)
           navigate(`/confirmation/confirm-email/${email}`);

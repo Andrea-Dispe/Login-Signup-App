@@ -7,16 +7,14 @@ const UserVerification = require('../models/UserVerificationModel')
 const PasswordReset = require('../models/PasswordResetModel')
 
 dotenv.config();
-const { AUTH_EMAIL, AUTH_PASSWORD, EMAIL_HOST } = process.env;
+const { AUTH_EMAIL, AUTH_PASSWORD } = process.env;
 
 exports.sendVerificationEmail = async ({ _id, username, email }, res) => {
   const currentUrl = "http://localhost:5000";
   const uniqueString = uuidv4() + _id;
   const mailOptions = {
-    from: EMAIL_HOST,
-    to: [email, AUTH_EMAIL],
+    to: [email],
     subject: `Hey ${username}, please verify your email`,
-    text: "TEST TEXT",
     html: `<p>Verify your email</p>
   <div>
     Click on this <a href=${currentUrl}/auth/user-verify/${_id}/${uniqueString}>link</a>
@@ -71,20 +69,18 @@ exports.sendVerificationEmail = async ({ _id, username, email }, res) => {
 }
 
 exports.sendPasswordResetEmail = async ({ _id, email, username }, redirectUrl, res) => {
+  console.log('redirectUrl inside sendPasswordResetEmail: ', redirectUrl);
   const resetString = uuidv4() + _id;
-  console.log('resetString: ', resetString);
   // DELETE ALL THE EXISTING PASSWORD RESET RECORDS ASSOCIATED TO THE EMAIL
   try {
     const countDeletedDocs = await PasswordReset.deleteMany({ userId: _id })
-    console.log('countDeletedDocs: ', countDeletedDocs);
   } catch (error) {
     return handleError(res, error, 401, errors.passwordReset.E_PR1004.msg)
   }
-  console.log('redirectUrl: ', redirectUrl);
 
   const mailOptions = {
-    from: EMAIL_HOST,
-    to: [email, 'dispe.andrea@gmail.com'],
+    from: AUTH_EMAIL,
+    to: email,
     subject: `Hey ${username}, did you ask to reset your password?`,
     text: "TEST TEXT",
     html: `<p>Password reset procedure</p>

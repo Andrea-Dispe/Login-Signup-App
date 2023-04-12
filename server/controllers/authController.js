@@ -15,6 +15,7 @@ const errors = require('../utils/errors')
 const { JWT_SECRET } = process.env
 
 exports.signup = async (req, res) => {
+
   const { username, email, password } = req.body;
 
   // VALIDATE INPUT
@@ -31,6 +32,8 @@ exports.signup = async (req, res) => {
   } catch (error) {
     return handleError(res, error, 500, errors.signup.E_SG1001.msg);
   }
+
+
   if (userFromEmail) {
     return handleError(res, errors.signup.E_SG1009.desc, 403, errors.signup.E_SG1009.msg);
   }
@@ -163,7 +166,7 @@ exports.verifyNewUser = async (req, res) => {
     // user verification exist
     const { expiresAt } = verification;
 
-    // CHECK IF VALIDATION EXPIRED
+    // If expired
     if (expiresAt < Date.now()) {
 
       // delete the verification

@@ -5,18 +5,16 @@ import { ImCross } from "react-icons/im";
 import { handleKeypress } from '../utils/utils'
 import ButtonConfirm from '../components/ButtonConfirm/ButtonConfirm'
 import StrengthMeter from '../components/StrengthMeter/StrengthMeter'
+import BackgroundBox from '../components/BackgroundBox/BackgroundBox'
 
 const PasswordReset = (props) => {
   const { resetString, _id } = useParams();
 
   return (
     <>
-      <div className="bg-blue-500 mt-7 shadow-2xl xs:rounded-t-xl sm:rounded-xl xs:h-48 sm:h-96">
-        <div className="p-5 text-white">
-          <h1 className="text-5xl">Welcome</h1>
-        </div>
-      </div>
-      <div className="flex items-center justify-center flex-col shadow-xl bg-white sm:rounded-xl p-2 sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
+      <BackgroundBox />
+
+      <div className="flex items-center justify-center flex-col shadow-xl bg-white sm:rounded-xl xs:rounded-b-xl p-2 sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
         <h2 className="text-blue-500 m-9 text-2xl font-bold w-15">Reset Password</h2>
         <div className='auth-input-container'>
           <FaKey className="auth-icon" size='20px' />

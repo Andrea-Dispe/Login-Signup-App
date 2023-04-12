@@ -10,7 +10,7 @@ const UserLoggedIn = ({ handleLogout, handleDeleteAccount, loading, user }) => {
         <p className="text-3xl mt-9">{user.username}</p>
       </BackgroundBox>
 
-      <div className="flex px-3 py-14 items-center flex-col shadow-xl justify-between bg-white sm:rounded-xl sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
+      <div className="flex px-3 py-14 items-center flex-col shadow-xl justify-between bg-white sm:rounded-xl xs:rounded-b-xl sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
         <h2 className="text-blue-500 text-2xl font-bold w-15">Manage account</h2>
 
         <div className='flex w-full flex-wrap justify-center'>

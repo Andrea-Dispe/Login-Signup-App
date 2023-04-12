@@ -19,7 +19,7 @@ const EmailSent = () => {
   return (
     <>
       <BackgroundBox />
-      <div className="flex items-center flex-col shadow-xl bg-white sm:rounded-xl p-2 sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
+      <div className="flex items-center flex-col shadow-xl bg-white sm:rounded-xl xs:rounded-b-xl p-2 sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
         <h2 className="text-blue-500 m-9 text-2xl font-bold w-15">{title}</h2>
         <div className='auth-input-container mb-24 text-center' style={{ 'marginTop': '65px  ' }}>
           {message}.

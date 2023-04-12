@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { FaUserAlt, FaKey, FaEye, FaEyeSlash } from "react-icons/fa";
 import { handleKeypress } from '../utils/utils'
 import ButtonConfirm from '../components/ButtonConfirm/ButtonConfirm'
+import BackgroundBox from '../components/BackgroundBox/BackgroundBox'
 import "./Login.css"
 
 
@@ -9,13 +10,8 @@ const Login = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isVal
 
   return (
     <>
-      <div className="bg-blue-500 mt-7 shadow-2xl xs:rounded-t-xl sm:rounded-xl xs:h-48 sm:h-96">
-        <div className="p-5 text-white">
-          <h1 className="text-5xl">Welcome</h1>
-        </div>
-      </div>
-
-      <div className="flex justify-center items-center flex-col shadow-xl bg-white sm:rounded-xl p-2 sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
+      <BackgroundBox />
+      <div className="flex justify-center items-center flex-col shadow-xl bg-white sm:rounded-xl xs:rounded-b-xl p-2 sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd -top-7">
         <h2 className="text-blue-500 m-9 text-2xl font-bold w-15">Log In</h2>
         <div className='auth-input-container login-email'>
           <FaUserAlt className="auth-icon" size='20px' />
@@ -52,16 +48,16 @@ const Login = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isVal
           text="LOGIN"
         />
         <div>
-          <p className="text-xs mt-2">
-            <Link to='/password-reset-request' className="text-blue-500 mb-5 text-xs">
+          <p className="sm:text-base md:text-xs mt-2">
+            <Link to='/password-reset-request' className="text-blue-500 mb-5">
               Forgot the password?
             </Link>
           </p>
         </div>
         <div>
-          <p className="text-xs mt-2">
+          <p className="sm:text-base md:text-xs mt-2">
             No account?{' '}
-            <Link to="/signup" className="text-blue-500 mb-5 text-xs">
+            <Link to="/signup" className="text-blue-500 mb-5">
               Register here.
             </Link>
           </p>

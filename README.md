@@ -1,24 +1,28 @@
-# GitHub Followers - Frontend
+# Login and Sign-up App
 
-This project was a coding exercise for an interview.
+This is a full-fledged login and sign-up app.
 
-This is a simple React app that displays all the GitHub followers of  [Mosh Hamedani](https://programmingwithmosh.com/).
+Features:
 
+- Sign-up & Login form with inputs validation and sanitation.
+- Account email verification.
+- Password forgot and password retrieve process through email.
+- User page after login with the option to delete the account.
+- Notifications available and data saved into Mongo Atlas.
 
-The purpose of the client is to develop with React, style it with Ant Design and display the data fetched from the server, all done without using create-react-app but using webpack instead.
-
-The purpose of the server is to create the express server that fetches the data of the GitHub followers of Mosh Hamedani and serve it to the frontend app.
-
-![Github followers app](presentation.gif)
+![Login-Signup-App](login-signup-thumb.gif)
 
 #### Tech stack (Front-end):
 
 - React
-- Ant Design
-- Webpack
+
+- Tailwind
+
+  
 
 #### Tech stack (Back-end):
 
 - Express
-
+- JWT
+- Mongoose
 
