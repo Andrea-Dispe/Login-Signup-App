@@ -125,7 +125,6 @@ function App() {
       confirmPassword
     })
       .then(response => {
-        console.log('response: ', response);
         if (response.data.status === "PENDING") {
           setLoading(false)
           navigate(`/confirmation/confirm-email/${email}`);
@@ -140,7 +139,6 @@ function App() {
   }
 
   const handleLogin = () => {
-    setEmail('dispeandrea@gmail.com')
     setLoading(true)
     axios.post(`${api}/auth/login`, {
       username,
@@ -148,7 +146,6 @@ function App() {
     })
       .then(response => {
         const currentUser = jwt(response.data.token);
-        console.log('currentUser: ', currentUser);
         // store all user information from the JWT
         if (currentUser) {
           setUser(currentUser);
