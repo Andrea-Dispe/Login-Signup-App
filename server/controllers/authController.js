@@ -14,8 +14,6 @@ const { sendVerificationEmail, handleError, sendPasswordResetEmail } = require('
 const errors = require('../utils/errors')
 const { JWT_SECRET } = process.env
 
-
-
 exports.signup = async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -76,7 +74,6 @@ exports.signup = async (req, res) => {
 exports.login = async (req, res) => {
   const { password, username } = req.body;
   const hasErrors = validationResult(req);
-
   // VALIDATE INPUTS
   if (!hasErrors.isEmpty()) {
     return handleError(res, hasErrors.array(), 401);
@@ -137,19 +134,6 @@ exports.login = async (req, res) => {
     })
     .status(200)
     .json({
-      authenticated: true,
-      token,
-      result: [{
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        verified: user.verified
-      }]
-    });
-
-
-
-    return res.json({
       authenticated: true,
       token,
       result: [{

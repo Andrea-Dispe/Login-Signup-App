@@ -8,6 +8,9 @@ const errors = require('../utils/errors')
 
 exports.getUsername = async (req, res) => {
   const {email} = req.body;
+
+
+  console.log('email: ', email);
   let user, username;
   try {
     user = await User.findOne({email})

@@ -1,13 +1,8 @@
-import { useEffect } from 'react';
-
 import BackgroundBox from '../components/BackgroundBox/BackgroundBox';
 import ClipLoader from "react-spinners/ClipLoader";
 
 
-const UserLoggedIn = ({ handleLogout, handleDeleteAccount, loading, getUsername, user }) => {
-
-  console.log('user: ', user);
-
+const UserLoggedIn = ({ handleLogout, handleDeleteAccount, loading, user }) => {
 
   return (
     <>
@@ -18,8 +13,8 @@ const UserLoggedIn = ({ handleLogout, handleDeleteAccount, loading, getUsername,
       <div className="flex px-3 py-14 items-center flex-col shadow-xl justify-between bg-white sm:rounded-xl sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
         <h2 className="text-blue-500 text-2xl font-bold w-15">Manage account</h2>
 
-        <div className='flex w-full'>
-          <span className='mr-3'>Delete account?</span>
+        <div className='flex w-full flex-wrap justify-center'>
+          <div className='mr-3 text-center mb-15'>Do you want to delete your account?</div>
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white w-1/2  focus:outline-none xs:text-lg sm:text-xs xs:rounded  p-2"
             onClick={() => handleDeleteAccount(user.email)}>
@@ -31,7 +26,7 @@ const UserLoggedIn = ({ handleLogout, handleDeleteAccount, loading, getUsername,
                 data-testid="loader"
               />
               :
-              'DELETE'
+              'YES, DELETE IT!'
             }
           </button>
         </div>

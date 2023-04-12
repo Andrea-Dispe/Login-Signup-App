@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { Link } from 'react-router-dom';
 import { FaUserAlt, FaKey, FaEye, FaEyeSlash } from "react-icons/fa";
 import { handleKeypress } from '../utils/utils'

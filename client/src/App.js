@@ -5,8 +5,11 @@ import Router from './Router';
 import Container from './components/Container/Container';
 import { useAddNotification } from './components/Notifications/NotificationProvider';
 import jwt from "jwt-decode"
+import vars from './config'
 
 import './App.css';
+
+const { port, host, apiPort, env } = vars;
 
 function App() {
   const dispatchAddNotification = useAddNotification();
@@ -43,7 +46,6 @@ function App() {
   const passwordRef = useRef();
   const confirmPasswordRef = useRef();
   const navigate = useNavigate();
-  // let loggedIn = Boolean(localStorage.getItem('token'));
   const USER_REGEX = /^[a-zA-Z0-9-_]{3,22}$/;
   const EMAIL_REGEX = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
   const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#?&*()$%]).{3,24}$/;
@@ -55,15 +57,12 @@ function App() {
     }
   }
 
-  const getUsername = () => {
-    axios.post('http://localhost:5000/user/get-username', { email }, options)
-      .then(response => {
-        console.log('response: ', response);
-        setUsername(response.data.username)
-      })
-      .catch(error => {
-        handleError(error)
-      });
+  let api;
+  if (env === 'Development') {
+    api = `${host}:${apiPort}`
+  }
+  if (env === 'Production') {
+    api = `${host}`
   }
 
   const handleShowPassword = (ref) => {
@@ -87,9 +86,9 @@ function App() {
 
   const handlePasswordResetRequest = () => {
     setLoading(true)
-    const redirectUrl = 'http://localhost:3000/password-reset';
+    const redirectUrl = `${host}/${port}`;
 
-    axios.post('http://localhost:5000/auth/request-password-reset', { email, redirectUrl })
+    axios.post(`${api}/auth/request-password-reset`, { email, redirectUrl })
       .then(response => {
         setLoading(false)
         if (response.data.status === "PENDING") {
@@ -107,9 +106,8 @@ function App() {
     setLoading(true)
     const userId = _id;
     const newPassword = password
-    axios.post('http://localhost:5000/auth/password-reset', { userId, resetString, newPassword })
+    axios.post(`${api}/auth/password-reset`, { userId, resetString, newPassword })
       .then(response => {
-        // dispatchAddNotification({ result: "SUCCESS", message: response.data.msg });
         setLoading(false)
 
         if (response.data.status === "SUCCESS") {
@@ -127,7 +125,7 @@ function App() {
 
   const handleSignup = () => {
     setLoading(true)
-    axios.post('http://localhost:5000/auth/signup', {
+    axios.post(`${api}/auth/signup`, {
       username,
       email,
       password,
@@ -150,12 +148,13 @@ function App() {
   const handleLogin = () => {
     setEmail('dispeandrea@gmail.com')
     setLoading(true)
-    axios.post('http://localhost:5000/auth/login', {
-      username: 'dispeandrea@gmail.com',
-      password: 'Projektor#000'
+    axios.post(`${api}/auth/login`, {
+      username,
+      password
     })
       .then(response => {
         const currentUser = jwt(response.data.token);
+        console.log('currentUser: ', currentUser);
         // store all user information from the JWT
         if (currentUser) {
           setUser(currentUser);
@@ -190,18 +189,18 @@ function App() {
 
   const handleDeleteAccount = (email) => {
     setLoading(true)
-    axios.post('http://localhost:5000/user/delete-account', {
+    axios.post(`${api}/user/delete-account`, {
       username: user.username,
       email: user.email
     }, options)
       .then(response => {
-        if(response.data.status === 'SUCCESS') {
+        if (response.data.status === 'SUCCESS') {
           localStorage.removeItem('token');
           setLoggedIn(false);
           setLoading(false)
           dispatchAddNotification({ result: response.data.status, message: response.data.msg });
           navigate('/');
-        }else {
+        } else {
           setLoading(false)
           dispatchAddNotification({ result: response.data.status, message: response.data.msg });
         }
@@ -218,10 +217,9 @@ function App() {
       setEmail(username);
     }
     // check if username matches the regexp. It returns a boolean value
-
     const result = USER_REGEX.test(username)
     let checkUsernameExists = setTimeout(() => {
-      axios.post('http://localhost:5000/auth/check-username-exists', {
+      axios.post(`${api}/auth/check-username-exists`, {
         username
       })
         .then(response => {
@@ -233,7 +231,6 @@ function App() {
           console.log('error: ', error);
         });
     }, 700);
-    // setValidUsername(result)
     return () => {
       clearTimeout(checkUsernameExists);
     }
@@ -243,7 +240,7 @@ function App() {
   useEffect(() => {
     const result = EMAIL_REGEX.test(email)
     let checkEmailExists = setTimeout(() => {
-      axios.post('http://localhost:5000/auth/check-email-exists', {
+      axios.post(`${api}/auth/check-email-exists`, {
         email
       })
         .then(response => {
@@ -266,9 +263,16 @@ function App() {
     (password.length > 0 && confirmPassword.length > 0) && setValidConfirmPassword(password === confirmPassword)
   }, [password, confirmPassword])
 
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if(token) {
+      const currentUser = jwt(token);
+      currentUser && setUser(currentUser)
+    }
+  }, [])
+
   return (
     <>
-      {/* {toasty && <Toasty />} */}
       <Container>
         <p ref={errRef}></p>
         <Router
@@ -314,7 +318,6 @@ function App() {
           loading={loading}
           setLoading={setLoading}
           handleDeleteAccount={handleDeleteAccount}
-          getUsername={getUsername}
           user={user}
         ></Router>
       </Container>

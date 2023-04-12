@@ -5,15 +5,14 @@ const startDB = require('./config/db')
 const cookieParser = require("cookie-parser");
 
 const PORT = 5000;
-// const corsOptions = {
-//   origin: 'http://localhost:3000',
-//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-// }
 
+
+// console.log('NODE_ENV ', NODE_ENV)
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 // use the auth route for all requests that pass through /auth
+
 app.use('/auth', require('./routes/auth'));
 app.use('/user', require('./routes/user'));
 
