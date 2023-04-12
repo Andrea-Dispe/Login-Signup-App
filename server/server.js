@@ -4,7 +4,7 @@ const cors = require('cors');
 const startDB = require('./config/db')
 const cookieParser = require("cookie-parser");
 
-const PORT = 5000;
+const PORT = 3000;
 
 
 // console.log('NODE_ENV ', NODE_ENV)

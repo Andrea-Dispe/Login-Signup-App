@@ -167,9 +167,9 @@ const SignUp = (props) => {
           text="REGISTER"
         />
         <div>
-          <p className="text-xs mt-2">
+          <p className="sm:text-base md:text-xs mt-2">
             Already registered?{' '}
-            <Link to="/" className="text-blue-500 mb-5 text-xs">
+            <Link to="/" className="text-blue-500 mb-5">
               Login here.
             </Link>
           </p>

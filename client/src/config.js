@@ -14,5 +14,4 @@ if (vars.env === 'Production') {
   vars.api = process.env.REACT_APP_PROD_HOST
 };
 
-
 export default vars

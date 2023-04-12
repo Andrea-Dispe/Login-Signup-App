@@ -1,0 +1,52 @@
+[debug] [2023-04-12T15:01:09.365Z] ----------------------------------------------------------------------
+[debug] [2023-04-12T15:01:09.367Z] Command:       /home/origin/.nvm/versions/node/v14.21.2/bin/node /home/origin/.nvm/versions/node/v14.21.2/bin/firebase deploy
+[debug] [2023-04-12T15:01:09.368Z] CLI Version:   11.25.3
+[debug] [2023-04-12T15:01:09.368Z] Platform:      linux
+[debug] [2023-04-12T15:01:09.368Z] Node Version:  v14.21.2
+[debug] [2023-04-12T15:01:09.368Z] Time:          Wed Apr 12 2023 17:01:09 GMT+0200 (Central European Summer Time)
+[debug] [2023-04-12T15:01:09.368Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-04-12T15:01:09.438Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-04-12T15:01:09.438Z] > authorizing via signed-in user (dispe.andrea@gmail.com)
+[debug] [2023-04-12T15:01:09.438Z] [iam] checking project login-signup-app-01 for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-04-12T15:01:09.440Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/login-signup-app-01:testIamPermissions [none]
+[debug] [2023-04-12T15:01:09.440Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/login-signup-app-01:testIamPermissions x-goog-quota-user=projects/login-signup-app-01
+[debug] [2023-04-12T15:01:09.440Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/login-signup-app-01:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-04-12T15:01:09.962Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/login-signup-app-01:testIamPermissions 200
+[debug] [2023-04-12T15:01:09.962Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/login-signup-app-01:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-04-12T15:01:09.964Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/login-signup-app-01 [none]
+[debug] [2023-04-12T15:01:10.573Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/login-signup-app-01 200
+[debug] [2023-04-12T15:01:10.574Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/login-signup-app-01 {"projectId":"login-signup-app-01","projectNumber":"505620077894","displayName":"Login-Signup-app","name":"projects/login-signup-app-01","resources":{"hostingSite":"login-signup-app-01"},"state":"ACTIVE","etag":"1_8cd2a4a5-46c9-4d66-af31-fb2de1163348"}
+[info] 
+[info] === Deploying to 'login-signup-app-01'...
+[info] 
+[info] i  deploying hosting 
+[debug] [2023-04-12T15:01:10.579Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/login-signup-app-01/versions [none]
+[debug] [2023-04-12T15:01:10.579Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/login-signup-app-01/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2023-04-12T15:01:12.211Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/login-signup-app-01/versions 200
+[debug] [2023-04-12T15:01:12.211Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/login-signup-app-01/versions {"name":"projects/505620077894/sites/login-signup-app-01/versions/bd0efb7e17d9f480","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[info] i  hosting[login-signup-app-01]: beginning deploy... 
+[info] i  hosting[login-signup-app-01]: found 13 files in build 
+[debug] [2023-04-12T15:01:12.224Z] [hosting] uploading with 200 concurrency
+[debug] [2023-04-12T15:01:12.707Z] [hosting] hash cache [YnVpbGQ] stored for 13 files
+[debug] [2023-04-12T15:01:12.708Z] [hosting][hash queue][FINAL] {"max":475,"min":9,"avg":47.69230769230769,"active":0,"complete":13,"success":13,"errored":0,"retried":0,"total":13,"elapsed":481}
+[debug] [2023-04-12T15:01:12.708Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/505620077894/sites/login-signup-app-01/versions/bd0efb7e17d9f480:populateFiles [none]
+[debug] [2023-04-12T15:01:12.708Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/505620077894/sites/login-signup-app-01/versions/bd0efb7e17d9f480:populateFiles {"files":{"/asset-manifest.json":"095c2337d1c2ab733ce0f57f8d269ea71f981ceb1bf6e515b1d53809df28e5e0","/index.html":"640627620d0d4617104bb67baab1c03a1fd10ead955a4d76e308bf86cb1308fd","/static/css/main.cbfcd14c.chunk.css":"4cba5030c526c913c22e6c4c3ef0bf05a39472d6acb5acf599d88580fd97ff9d","/static/js/2.2c0a61c5.chunk.js.LICENSE.txt":"8c676477f266522705c19a8a93926a003b3ee9642987bc26e0bc5aea5ee752ce","/static/js/3.410df5fa.chunk.js":"2a0f962682556620f74256d6e3eaa7093e6fc605841b53909382a44ac4d0c87e","/static/js/3.410df5fa.chunk.js.map":"5bb5ec3e51e922f65427063355980d2334951a416833101f7edba3344639b85c","/static/css/main.cbfcd14c.chunk.css.map":"4c124c9e80514e0ebf7120701c52828ab727c2b03a6884286c63902fb6685c93","/static/js/main.7e849a97.chunk.js":"c0173e2c3e1ae8567fa7b3ca3165c852fcdb62fa3b5596a8028aa29932c8b424","/static/js/runtime-main.a3609f17.js":"750482bdbcb82cea1bc6cdf801eb38c6af7f5564a86a1657fcba27abedb7c9ec","/static/js/runtime-main.a3609f17.js.map":"81a62ad29fe07af5012baa8c8be410c0e75357a1f96b0ada3eedb9d6d8d87bd5","/static/js/main.7e849a97.chunk.js.map":"f00c7fd873b147fd7536789dfff0df4e3f12bc625d10adae10f1617636b908e1","/static/js/2.2c0a61c5.chunk.js":"af1e6b7a778ff12f3c6675a5c7b394f650214c3d0324c5be9af1e00a71f11deb","/static/js/2.2c0a61c5.chunk.js.map":"f708c4576ab7da1a4fecd1cfc6e4e86a9c4c771ba76b3e887ec656202b2ec3ec"}}
+[debug] [2023-04-12T15:01:13.850Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/505620077894/sites/login-signup-app-01/versions/bd0efb7e17d9f480:populateFiles 200
+[debug] [2023-04-12T15:01:13.850Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/505620077894/sites/login-signup-app-01/versions/bd0efb7e17d9f480:populateFiles {"uploadRequiredHashes":["640627620d0d4617104bb67baab1c03a1fd10ead955a4d76e308bf86cb1308fd","f00c7fd873b147fd7536789dfff0df4e3f12bc625d10adae10f1617636b908e1","c0173e2c3e1ae8567fa7b3ca3165c852fcdb62fa3b5596a8028aa29932c8b424","095c2337d1c2ab733ce0f57f8d269ea71f981ceb1bf6e515b1d53809df28e5e0"],"uploadUrl":"https://upload-firebasehosting.googleapis.com/upload/sites/login-signup-app-01/versions/bd0efb7e17d9f480/files"}
+[debug] [2023-04-12T15:01:13.852Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/login-signup-app-01/versions/bd0efb7e17d9f480/files/640627620d0d4617104bb67baab1c03a1fd10ead955a4d76e308bf86cb1308fd [none]
+[debug] [2023-04-12T15:01:13.852Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/login-signup-app-01/versions/bd0efb7e17d9f480/files/640627620d0d4617104bb67baab1c03a1fd10ead955a4d76e308bf86cb1308fd [stream]
+[debug] [2023-04-12T15:01:13.853Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/login-signup-app-01/versions/bd0efb7e17d9f480/files/f00c7fd873b147fd7536789dfff0df4e3f12bc625d10adae10f1617636b908e1 [none]
+[debug] [2023-04-12T15:01:13.854Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/login-signup-app-01/versions/bd0efb7e17d9f480/files/f00c7fd873b147fd7536789dfff0df4e3f12bc625d10adae10f1617636b908e1 [stream]
+[debug] [2023-04-12T15:01:13.855Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/login-signup-app-01/versions/bd0efb7e17d9f480/files/c0173e2c3e1ae8567fa7b3ca3165c852fcdb62fa3b5596a8028aa29932c8b424 [none]
+[debug] [2023-04-12T15:01:13.855Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/login-signup-app-01/versions/bd0efb7e17d9f480/files/c0173e2c3e1ae8567fa7b3ca3165c852fcdb62fa3b5596a8028aa29932c8b424 [stream]
+[debug] [2023-04-12T15:01:13.856Z] >>> [apiv2][query] POST https://upload-firebasehosting.googleapis.com/upload/sites/login-signup-app-01/versions/bd0efb7e17d9f480/files/095c2337d1c2ab733ce0f57f8d269ea71f981ceb1bf6e515b1d53809df28e5e0 [none]
+[debug] [2023-04-12T15:01:13.856Z] >>> [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/login-signup-app-01/versions/bd0efb7e17d9f480/files/095c2337d1c2ab733ce0f57f8d269ea71f981ceb1bf6e515b1d53809df28e5e0 [stream]
+[debug] [2023-04-12T15:01:13.857Z] [hosting][populate queue][FINAL] {"max":1146,"min":1146,"avg":1146,"active":0,"complete":1,"success":1,"errored":0,"retried":0,"total":1,"elapsed":1151}
+[debug] [2023-04-12T15:01:13.857Z] [hosting] uploads queued: 4
+[debug] [2023-04-12T15:01:15.281Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/login-signup-app-01/versions/bd0efb7e17d9f480/files/f00c7fd873b147fd7536789dfff0df4e3f12bc625d10adae10f1617636b908e1 200
+[debug] [2023-04-12T15:01:15.281Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/login-signup-app-01/versions/bd0efb7e17d9f480/files/f00c7fd873b147fd7536789dfff0df4e3f12bc625d10adae10f1617636b908e1 [stream]
+[debug] [2023-04-12T15:01:15.282Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/login-signup-app-01/versions/bd0efb7e17d9f480/files/095c2337d1c2ab733ce0f57f8d269ea71f981ceb1bf6e515b1d53809df28e5e0 200
+[debug] [2023-04-12T15:01:15.282Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/login-signup-app-01/versions/bd0efb7e17d9f480/files/095c2337d1c2ab733ce0f57f8d269ea71f981ceb1bf6e515b1d53809df28e5e0 [stream]
+[debug] [2023-04-12T15:01:15.531Z] <<< [apiv2][status] POST https://upload-firebasehosting.googleapis.com/upload/sites/login-signup-app-01/versions/bd0efb7e17d9f480/files/c0173e2c3e1ae8567fa7b3ca3165c852fcdb62fa3b5596a8028aa29932c8b424 200
+[debug] [2023-04-12T15:01:15.531Z] <<< [apiv2][body] POST https://upload-firebasehosting.googleapis.com/upload/sites/login-signup-app-01/versions/bd0efb7e17d9f480/files/c0173e2c3e1ae8567fa7b3ca3165c852fcdb62fa3b5596a8028aa29932c8b424 [stream]
