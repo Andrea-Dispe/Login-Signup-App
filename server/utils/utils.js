@@ -10,6 +10,7 @@ const {api} = require('../config/config')
 dotenv.config();
 const { AUTH_EMAIL, AUTH_PASSWORD } = process.env;
 
+console.log('api: ', api);
 exports.sendVerificationEmail = async ({ _id, username, email }, res) => {
 
   const uniqueString = uuidv4() + _id;
