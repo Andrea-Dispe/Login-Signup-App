@@ -1,5 +1,6 @@
 import BackgroundBox from '../components/BackgroundBox/BackgroundBox';
 import ClipLoader from "react-spinners/ClipLoader";
+import FormBox from '../components/FormBox/FomBox'
 
 
 const UserLoggedIn = ({ handleLogout, handleDeleteAccount, loading, user }) => {
@@ -10,7 +11,7 @@ const UserLoggedIn = ({ handleLogout, handleDeleteAccount, loading, user }) => {
         <p className="text-3xl mt-9">{user.username}</p>
       </BackgroundBox>
 
-      <div className="flex px-3 py-14 items-center flex-col shadow-xl justify-between bg-white sm:rounded-xl xs:rounded-b-xl sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
+      <div className="flex px-3 py-14 items-center flex-col shadow-xl justify-between bg-white sm:rounded-xl xs:rounded-b-xl sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd -top-7">
         <h2 className="text-blue-500 text-2xl font-bold w-15">Manage account</h2>
 
         <div className='flex w-full flex-wrap justify-center'>

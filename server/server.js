@@ -7,7 +7,6 @@ const cookieParser = require("cookie-parser");
 const PORT = 3000;
 
 
-// console.log('NODE_ENV ', NODE_ENV)
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());

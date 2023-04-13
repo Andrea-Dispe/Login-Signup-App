@@ -75,8 +75,10 @@ exports.signup = async (req, res) => {
 }
 
 exports.login = async (req, res) => {
-  const { password, username } = req.body;
+  const { password, username, email } = req.body;
+
   const hasErrors = validationResult(req);
+
   // VALIDATE INPUTS
   if (!hasErrors.isEmpty()) {
     return handleError(res, hasErrors.array(), 401);
@@ -84,13 +86,15 @@ exports.login = async (req, res) => {
 
   // VALIDATE USER
   let user;
-  if (username.includes('@')) {
+  if (email) {
     try {
-      user = await User.findOne({ email: username });
+      user = await User.findOne({ email });
     } catch (error) {
       return handleError(res, error, 500, errors.login.E_LG1001.msg);
     }
-  } else {
+  }
+
+  if (username) {
     try {
       user = await User.findOne({ username });
     } catch (error) {
@@ -132,20 +136,20 @@ exports.login = async (req, res) => {
 
 
     return res
-    .cookie("access_token", token, {
-      httpOnly: true,
-    })
-    .status(200)
-    .json({
-      authenticated: true,
-      token,
-      result: [{
-        id: user._id,
-        username: user.username,
-        email: user.email,
-        verified: user.verified
-      }]
-    });
+      .cookie("access_token", token, {
+        httpOnly: true,
+      })
+      .status(200)
+      .json({
+        authenticated: true,
+        token,
+        result: [{
+          id: user._id,
+          username: user.username,
+          email: user.email,
+          verified: user.verified
+        }]
+      });
   } else {
     return handleError(res, 'User not verified yet', 401, errors.login.E_LG1007.msg);
   }
@@ -268,7 +272,7 @@ exports.checkEmailExists = async (req, res) => {
   })
 }
 
-exports.requestPasswordReset = async (req, res) => {
+exports.passwordResetRequest = async (req, res) => {
   const { email, redirectUrl } = req.body;
   const hasErrors = validationResult(req);
 

@@ -19,7 +19,6 @@ const checkAuth = async (req, res, next) => {
     } else {
         try {
             const user = await jwt.verify(token, JWT_SECRET)
-            console.log('user in middle: ', user);
             req.email = user.email
             next()
         } catch (error) {

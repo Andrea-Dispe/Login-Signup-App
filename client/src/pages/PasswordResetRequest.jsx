@@ -4,6 +4,7 @@ import { FaEnvelope } from "react-icons/fa";
 import BackgroundBox from '../components/BackgroundBox/BackgroundBox'
 import { handleKeypress } from '../utils/utils'
 import ButtonConfirm from '../components/ButtonConfirm/ButtonConfirm'
+import FormBox from '../components/FormBox/FomBox'
 
 
 const PasswordResetRequest = ({ handlePasswordResetRequest, email, setEmail, loading }) => {
@@ -19,7 +20,7 @@ const PasswordResetRequest = ({ handlePasswordResetRequest, email, setEmail, loa
     <>
       <BackgroundBox />
 
-      <div className="flex items-center flex-col shadow-xl bg-white sm:rounded-xl xs:rounded-b-xl p-2 sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd">
+      <FormBox>
         <h2 className="text-blue-500 m-9 text-2xl font-bold w-15">Reset Password</h2>
         <div className='auth-input-container margin-bt-10' style={{ 'marginTop': '75px  ' }}>
           <FaEnvelope className="auth-icon" size='20px' />
@@ -47,7 +48,7 @@ const PasswordResetRequest = ({ handlePasswordResetRequest, email, setEmail, loa
           </p>
         </div>
 
-      </div>
+      </FormBox>
 
     </>
   );

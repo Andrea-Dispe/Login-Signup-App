@@ -14,7 +14,6 @@ const startDB = () => {
       console.log('connected to the DB');
     })
     .catch((error) => {
-      console.log('Error connecting to Mongo')
       console.log(error);
       console.error(error.message);
     });

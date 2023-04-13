@@ -1,6 +1,6 @@
 const signup = require('./signup');
 const login = require('./login');
-const requestPasswordReset = require('./requestPasswordReset');
+const passwordResetRequest = require('./passwordResetRequest');
 const checkAuth = require('./checkAuth');
 
 
@@ -8,6 +8,6 @@ const checkAuth = require('./checkAuth');
 module.exports = {
   signup,
   login,
-  requestPasswordReset,
-  checkAuth
+  passwordResetRequest,
+  checkAuth,
 }

@@ -5,11 +5,10 @@ import Router from './Router';
 import Container from './components/Container/Container';
 import { useAddNotification } from './components/Notifications/NotificationProvider';
 import jwt from "jwt-decode"
-import vars from './config'
-
+import config from './config'
 import './App.css';
 
-const { api, env } = vars;
+const { api, clientHost } = config;
 
 function App() {
   const dispatchAddNotification = useAddNotification();
@@ -38,6 +37,7 @@ function App() {
   const [validEmail, setValidEmail] = useState(false);
   const [emailFocus, setEmailFocus] = useState(false);
   const [emailExists, setEmailExists] = useState(false)
+  const [finsihedTyping, setFinsihedTyping] = useState(false)
 
 
   const userRef = useRef();
@@ -78,9 +78,9 @@ function App() {
 
   const handlePasswordResetRequest = () => {
     setLoading(true)
-    const redirectUrl = `${api}`;
+    const redirectUrl = `${clientHost}`;
 
-    axios.post(`${api}/auth/request-password-reset`, { email, redirectUrl })
+    axios.post(`${api}/auth/password-reset-request`, { email, redirectUrl })
       .then(response => {
         setLoading(false)
         if (response.data.status === "PENDING") {
@@ -117,7 +117,6 @@ function App() {
 
   const handleSignup = () => {
     setLoading(true)
-
     axios.post(`${api}/auth/signup`, {
       username,
       email,
@@ -142,6 +141,7 @@ function App() {
     setLoading(true)
     axios.post(`${api}/auth/login`, {
       username,
+      email,
       password
     })
       .then(response => {
@@ -159,6 +159,7 @@ function App() {
       })
       .catch(error => {
         setLoading(false)
+        console.log('error: ', error);
         handleError(error);
       });
   }
@@ -168,7 +169,11 @@ function App() {
       dispatchAddNotification({ result: "ERROR", message: "There is a problem with the connection to the server. Please try again" });
     } else {
       const errorsArray = error.response.data.errors;
-      errorsArray.forEach(err => dispatchAddNotification({ result: "ERROR", message: err.msg }));
+      if (errorsArray[0].hasOwnProperty('nestedErrors')) {
+        errorsArray[0].nestedErrors.forEach(err => dispatchAddNotification({ result: "ERROR", message: err.msg }));
+      } else {
+        errorsArray.forEach(err => dispatchAddNotification({ result: "ERROR", message: err.msg }));
+      }
     }
   }
 
@@ -204,9 +209,8 @@ function App() {
 
   // VALIDATE THE USERNAME
   useEffect(() => {
-    if (username.includes('@')) {
-      setEmail(username);
-    }
+    setFinsihedTyping(false)
+
     // check if username matches the regexp. It returns a boolean value
     const result = USER_REGEX.test(username)
     let checkUsernameExists = setTimeout(() => {
@@ -216,6 +220,7 @@ function App() {
         .then(response => {
           setUsernameExists(response.data.exists)
           setValidUsername(result)
+          setFinsihedTyping(true)
 
         })
         .catch(error => {
@@ -229,6 +234,8 @@ function App() {
 
   // VALIDATE THE EMAIL
   useEffect(() => {
+    setFinsihedTyping(false)
+
     const result = EMAIL_REGEX.test(email)
     let checkEmailExists = setTimeout(() => {
       axios.post(`${api}/auth/check-email-exists`, {
@@ -237,11 +244,13 @@ function App() {
         .then(response => {
           setEmailExists(response.data.exists)
           setValidEmail(result)
+          setFinsihedTyping(true)
         })
         .catch(error => {
           console.log('error: ', error);
         });
     }, 500);
+
     return () => {
       clearTimeout(checkEmailExists);
     }
@@ -256,7 +265,7 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    if(token) {
+    if (token) {
       const currentUser = jwt(token);
       currentUser && setUser(currentUser)
     }
@@ -309,6 +318,7 @@ function App() {
           loading={loading}
           setLoading={setLoading}
           handleDeleteAccount={handleDeleteAccount}
+          finsihedTyping={finsihedTyping}
           user={user}
         ></Router>
       </Container>

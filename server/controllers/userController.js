@@ -8,9 +8,6 @@ const errors = require('../utils/errors')
 
 exports.getUsername = async (req, res) => {
   const {email} = req.body;
-
-
-  console.log('email: ', email);
   let user, username;
   try {
     user = await User.findOne({email})
@@ -31,10 +28,6 @@ exports.getUsername = async (req, res) => {
 
 exports.deleteAccount = async (req, res) => {
   const { username, email } = req.body;
-
-  console.log('username: ', username);
-  console.log('email: ', email);
-
   try {
     const deletedUser = await User.deleteOne(username ? { username } : { email })
 

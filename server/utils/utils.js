@@ -5,19 +5,20 @@ const dotenv = require('dotenv');
 const errors = require('../utils/errors');
 const UserVerification = require('../models/UserVerificationModel')
 const PasswordReset = require('../models/PasswordResetModel')
+const {api} = require('../config/config')
 
 dotenv.config();
 const { AUTH_EMAIL, AUTH_PASSWORD } = process.env;
 
 exports.sendVerificationEmail = async ({ _id, username, email }, res) => {
-  const currentUrl = "http://localhost:5000";
+
   const uniqueString = uuidv4() + _id;
   const mailOptions = {
     to: [email],
     subject: `Hey ${username}, please verify your email`,
     html: `<p>Verify your email</p>
   <div>
-    Click on this <a href=${currentUrl}/auth/user-verify/${_id}/${uniqueString}>link</a>
+    Click on this <a href=${api}/auth/user-verify/${_id}/${uniqueString}>link</a>
   </div>
   <div>
     This link will expire in 24 hours from the moment you received this email.
@@ -69,7 +70,6 @@ exports.sendVerificationEmail = async ({ _id, username, email }, res) => {
 }
 
 exports.sendPasswordResetEmail = async ({ _id, email, username }, redirectUrl, res) => {
-  console.log('redirectUrl inside sendPasswordResetEmail: ', redirectUrl);
   const resetString = uuidv4() + _id;
   // DELETE ALL THE EXISTING PASSWORD RESET RECORDS ASSOCIATED TO THE EMAIL
   try {
@@ -88,7 +88,7 @@ exports.sendPasswordResetEmail = async ({ _id, email, username }, redirectUrl, r
      Someone, hopefully you, has requested to reset your account password. If this was not you please ignore this email and your account will be safe.
     </div>
     <div>
-      If it was you to request it then click on this <a href=${redirectUrl}/${_id}/${resetString}>link</a>
+      If it was you to request it then click on this <a href=${redirectUrl}/password-reset/${_id}/${resetString}>link</a>
     </div>
     <div>
       This link will expire in 30 minutes from the moment you received this email.
@@ -102,7 +102,6 @@ exports.sendPasswordResetEmail = async ({ _id, email, username }, redirectUrl, r
   } catch (error) {
     return handleError(res, error, 401, errors.passwordReset.E_PR1005.msg)
   }
-  console.log('hashedResetString: ', hashedResetString);
 
   // SAVE THE NEW PASSWORD RESET RECORD INTO THE DB
   try {
@@ -143,8 +142,6 @@ exports.sendPasswordResetEmail = async ({ _id, email, username }, redirectUrl, r
 
 const handleError = (res, error, statusCode, msg = "") => {
   console.error('error: ', error);
-  console.log('msg: ', msg);
-
   if (!msg) {
     return res.status(statusCode).send({
       errors: error

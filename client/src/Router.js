@@ -71,6 +71,7 @@ const Router = (props) => {
           showConfirmPassword={props.showConfirmPassword}
           loading={props.loading}
           setLoading={props.setLoading}
+          finsihedTyping={props.finsihedTyping}
         />
       }>
       </Route>

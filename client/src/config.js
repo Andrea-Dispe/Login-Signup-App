@@ -2,16 +2,18 @@
 import * as dotenv from 'dotenv'
 dotenv.config();
 
-let vars = {
+let config = {
   env: process.env.REACT_APP_ENVIRONMENT
 }
 
-if (vars.env === 'Development') {
-  vars.api = `${process.env.REACT_APP_DEV_HOST}:${process.env.REACT_APP_DEV_API_PORT}`
+if (config.env === 'Development') {
+  config.api = `${process.env.REACT_APP_DEV_API_HOST}:${process.env.REACT_APP_DEV_API_PORT}`;
+  config.clientHost = `${process.env.REACT_APP_DEV_CLIENT_HOST}:${process.env.REACT_APP_DEV_CLIENT_PORT}`
 };
 
-if (vars.env === 'Production') {
-  vars.api = process.env.REACT_APP_PROD_HOST
+if (config.env === 'Production') {
+  config.api = process.env.REACT_APP_PROD_API_HOST;
+  config.clientHost = process.env.REACT_APP_PROD_CLIENT_HOST
 };
 
-export default vars
+export default config

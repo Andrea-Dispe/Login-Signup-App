@@ -3,15 +3,28 @@ import { FaUserAlt, FaKey, FaEye, FaEyeSlash } from "react-icons/fa";
 import { handleKeypress } from '../utils/utils'
 import ButtonConfirm from '../components/ButtonConfirm/ButtonConfirm'
 import BackgroundBox from '../components/BackgroundBox/BackgroundBox'
+import FormBox from '../components/FormBox/FomBox'
+
 import "./Login.css"
 
 
 const Login = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isValidLogin, username, password, setIsValidLogin, passwordRef, handleShowPassword, showPassword, loading, setLoading, }) => {
 
+  const handleCredentials = (e) => {
+    const value = e.target.value
+    if (value.includes('@')) {
+      setEmail(value);
+      setUsername('')
+    } else {
+      setUsername(value);
+      setEmail('')
+    }
+  }
+
   return (
     <>
       <BackgroundBox />
-      <div className="flex justify-center items-center flex-col shadow-xl bg-white sm:rounded-xl xs:rounded-b-xl p-2 sm:absolute sm:right-12 md:right-8 lg:right:32 sm:w-72 h-dd -top-7">
+      <FormBox>
         <h2 className="text-blue-500 m-9 text-2xl font-bold w-15">Log In</h2>
         <div className='auth-input-container login-email'>
           <FaUserAlt className="auth-icon" size='20px' />
@@ -20,7 +33,7 @@ const Login = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isVal
             placeholder="Enter username or email"
             type="text"
             className="auth-input"
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => handleCredentials(e)}
             required
             onKeyPress={(e) => handleKeypress(e, handleLogin)}
           />
@@ -62,8 +75,7 @@ const Login = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isVal
             </Link>
           </p>
         </div>
-      </div>
-
+      </FormBox>
     </>
   );
 };

@@ -19,7 +19,7 @@ router.post('/check-username-exists', authController.checkUsernameExists);
 
 router.post('/check-email-exists', authController.checkEmailExists);
 
-router.post('/request-password-reset', middlewares.requestPasswordReset, authController.requestPasswordReset)
+router.post('/password-reset-request', middlewares.passwordResetRequest, authController.passwordResetRequest)
 
 router.post('/password-reset', authController.passwordReset)
 
