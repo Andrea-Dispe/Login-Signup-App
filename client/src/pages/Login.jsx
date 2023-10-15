@@ -63,7 +63,7 @@ const Login = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isVal
         <div>
           <p className="sm:text-base md:text-xs mt-2">
             <Link to='/password-reset-request' className="text-blue-500 mb-5">
-              Forgot the password?
+              Forgot the password? diocane
             </Link>
           </p>
         </div>
