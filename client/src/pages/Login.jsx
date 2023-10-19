@@ -8,7 +8,6 @@ import ReactGA from "react-ga4";
 
 import "./Login.css"
 
-
 const Login = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isValidLogin, username, password, setIsValidLogin, passwordRef, handleShowPassword, showPassword, loading, setLoading, }) => {
 
   const handleCredentials = (e) => {
@@ -23,8 +22,8 @@ const Login = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isVal
   }
 
   const trackEvent = (category= "Event Category", ) => {
-
-    ReactGA.event("diocane",  {action: 'press_login_button'});
+    window.dataLayer.push({'event': 'button_clicked_test_new'})
+    ReactGA.event("test_click_login",  {action: 'press_login_button'});
   }
 
 

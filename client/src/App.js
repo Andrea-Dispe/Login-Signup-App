@@ -9,7 +9,8 @@ import config from './config'
 import './App.css';
 import ReactGA from "react-ga4";
 
-ReactGA.initialize("G-F4CJ4T6GZ9");
+ReactGA.initialize("GTM-N6878GQC");
+// ReactGA.initialize("G-F4CJ4T6GZ9");
 
 
 

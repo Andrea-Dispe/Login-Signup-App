@@ -5,8 +5,10 @@ const ButtonConfirm = ({ loading, cb, text }) => {
     <button
       className="bg-blue-500 hover:bg-blue-700 text-white w-full mt-7 mb-1 focus:outline-none xs:text-lg sm:text-xs xs:rounded p-2 flex justify-center"
       style={{ display: 'flex', justifyContent: 'center' }}
-      onClick={cb}
-    > TEST BTN
+      onClick={() => {window.dataLayer.push({'event': 'button_clicked_test_new'})}}
+      id="login_button"
+
+    >
       {loading ?
         <ClipLoader
           color={'white'}
