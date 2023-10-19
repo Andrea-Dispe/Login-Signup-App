@@ -6,7 +6,7 @@ const ButtonConfirm = ({ loading, cb, text }) => {
       className="bg-blue-500 hover:bg-blue-700 text-white w-full mt-7 mb-1 focus:outline-none xs:text-lg sm:text-xs xs:rounded p-2 flex justify-center"
       style={{ display: 'flex', justifyContent: 'center' }}
       onClick={cb}
-    >
+    > TEST BTN
       {loading ?
         <ClipLoader
           color={'white'}

@@ -4,6 +4,7 @@ import { handleKeypress } from '../utils/utils'
 import ButtonConfirm from '../components/ButtonConfirm/ButtonConfirm'
 import BackgroundBox from '../components/BackgroundBox/BackgroundBox'
 import FormBox from '../components/FormBox/FomBox'
+import ReactGA from "react-ga4";
 
 import "./Login.css"
 
@@ -20,6 +21,21 @@ const Login = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isVal
       setEmail('')
     }
   }
+
+  const trackEvent = (category= "Event Category", ) => {
+
+    ReactGA.event("diocane",  {action: 'press_login_button'});
+  }
+
+
+  // ReactGA.event({
+  //   category: "your category",
+  //   action: "your action",
+  //   label: "your label", // optional
+  //   value: 99, // optional, must be a number
+  //   nonInteraction: true, // optional, true/false
+  //   transport: "xhr", // optional, beacon/xhr/image
+  // });
 
   return (
     <>
@@ -57,7 +73,8 @@ const Login = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isVal
         </div>
         <ButtonConfirm
           loading={loading}
-          cb={handleLogin}
+          // cb={handleLogin}
+          cb={trackEvent}
           text="LOGIN"
         />
         <div>
