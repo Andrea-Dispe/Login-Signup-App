@@ -8,9 +8,28 @@ import ReactGA from "react-ga4";
 
 import "./Login.css"
 
-const Login = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isValidLogin, username, password, setIsValidLogin, passwordRef, handleShowPassword, showPassword, loading, setLoading, }) => {
+interface LoginProps {
 
-  const handleCredentials = (e) => {
+  setUsername: (value: string) => void;
+  setEmail: (value: string) => void;
+  setPassword: (value: string) => void;
+  handleLogin: () => void;
+  userRef: React.RefObject<HTMLInputElement>;
+  isValidLogin: boolean;
+  username: string;
+  password: string;
+  setIsValidLogin: (value: boolean) => void;
+  passwordRef: React.RefObject<HTMLInputElement>;
+  handleShowPassword: (ref: React.RefObject<HTMLInputElement>) => void;
+  showPassword: boolean;
+  loading: boolean;
+  setLoading: (value: boolean) => void;
+}
+
+
+const Login: React.FC<LoginProps>  = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isValidLogin, username, password, setIsValidLogin, passwordRef, handleShowPassword, showPassword, loading, setLoading, }) => {
+
+  const handleCredentials = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     if (value.includes('@')) {
       setEmail(value);
@@ -22,8 +41,8 @@ const Login = ({ setUsername, setEmail, setPassword, handleLogin, userRef, isVal
   }
 
   const trackEvent = (category= "Event Category", ) => {
-    window.dataLayer.push({'event': 'button_clicked_test_new'})
-    ReactGA.event("test_click_login",  {action: 'press_login_button'});
+    // window.dataLayer.push({'event': 'button_clicked_test_new'})
+    // ReactGA.event("test_click_login",  {action: 'press_login_button'});
   }
 
 

@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 
 import UserLoggedIn from './pages/UserLoggedIn';
 import SignUp from './pages/Signup';
-import Login from './pages/Login.jsx';
+import Login from './pages/Login.tsx';
 import Confirmation from "./pages/Confirmation";
 import PasswordResetRequest from "./pages/PasswordResetRequest"
 import PasswordReset from "./pages/PasswordReset"

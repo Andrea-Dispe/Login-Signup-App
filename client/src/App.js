@@ -9,12 +9,11 @@ import config from './config'
 import './App.css';
 import ReactGA from "react-ga4";
 
-ReactGA.initialize("GTM-N6878GQC");
+// ReactGA.initialize("GTM-N6878GQC");
 // ReactGA.initialize("G-F4CJ4T6GZ9");
 
 
-
-ReactGA.send({ hitType: "pageview", page: window.location.pathname + window.location.search });
+// ReactGA.send({ hitType: "pageview", page: window.location.pathname + window.location.search });
 
 console.log('TEST GA: ');
 const { api, clientHost } = config;
